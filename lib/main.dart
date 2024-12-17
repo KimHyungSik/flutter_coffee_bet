@@ -1,7 +1,9 @@
 import 'package:coffee_bet/touch_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   runApp(const GuessingGameApp());
 }
 
@@ -37,10 +39,6 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        title: const Text('Guessing Game'),
-        centerTitle: true,
-      ),
       body: Listener(
         onPointerDown: _handlePointerDown,
         onPointerMove: _handlePointerMove,
