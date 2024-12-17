@@ -1,3 +1,4 @@
+import 'package:coffee_bet/touch_painter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,6 +29,10 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+
+  // Map to store active touches (pointer ID → position)
+  final Map<int, Offset> _activeTouches = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +41,33 @@ class _GameScreenState extends State<GameScreen> {
         title: const Text('Guessing Game'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text(
-          'Touch to Play!',
-          style: TextStyle(color: Colors.white, fontSize: 24),
+      body: Listener(
+        onPointerDown: _handlePointerDown,
+        onPointerMove: _handlePointerMove,
+        onPointerUp: _handlePointerUp,
+        child: CustomPaint(
+          painter: TouchPainter(_activeTouches),
+          child: Container(), // Makes the Listener cover the whole screen
         ),
       ),
     );
+  }
+
+  void _handlePointerDown(PointerDownEvent event) {
+    setState(() {
+      _activeTouches[event.pointer] = event.position;
+    });
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    setState(() {
+      _activeTouches[event.pointer] = event.position;
+    });
+  }
+
+  void _handlePointerUp(PointerUpEvent event) {
+    setState(() {
+      _activeTouches.remove(event.pointer);
+    });
   }
 }
