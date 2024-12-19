@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:coffee_bet/touch_painter.dart';
+import 'package:coffee_bet/user_circle_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -44,7 +44,7 @@ class _GameScreenState extends State<GameScreen> {
   bool _isGameActive = false; // Tracks if the game has started
   int _lastFailingPointer = -1; // Pointer ID of the failing player
   bool _isGameOver = false; // Tracks if the game has ended
-  int? _failingPointer;
+  Map<int, Offset>? _failingPointer;
 
   bool _isCountingDown = false; // Tracks if the countdown has started
   int _countdown = 3; // Countdown timer value
@@ -61,7 +61,7 @@ class _GameScreenState extends State<GameScreen> {
               onPointerMove: _handlePointerMove,
               onPointerUp: _handlePointerUp,
               child: CustomPaint(
-                painter: TouchPainter(_activeTouches),
+                painter: UserCirclePainter(_activeTouches),
                 child: Container(), // Covers the entire screen
               ),
             ),
@@ -79,10 +79,12 @@ class _GameScreenState extends State<GameScreen> {
             if (_isGameOver)
               GameOverWidget(
                 onRestart: _restartGame,
+                failingPointers: _failingPointer ?? {},
               ),
           ],
         ));
   }
+
   void _handlePointerDown(PointerDownEvent event) {
     if (_isGameActive || _activeTouches.length >= MAX_GAME_PLAY) return;
 
@@ -142,12 +144,16 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _checkGameEnd() {
-    if (_activeTouches.isEmpty && _isGameActive) {
+    if (_isGameActive) {
       // Last player fails
-      setState(() {
-        _isGameOver = true;
-        _failingPointer = null; // No specific pointer fails, everyone loses.
-      });
+      if (_activeTouches.length == 1) {
+        setState(() {
+          _isGameOver = true;
+          _failingPointer = {
+            _activeTouches.keys.first: _activeTouches.values.first
+          }; // No specific pointer fails, everyone loses.
+        });
+      }
     }
   }
 
