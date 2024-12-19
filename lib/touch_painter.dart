@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TouchPainter extends CustomPainter {
   final Map<int, Offset> touches;
-  final List<Color> touchColors = [
+  static const List<Color> touchColors = [
     Colors.red,
     Colors.green,
     Colors.blue,
@@ -24,14 +24,22 @@ class TouchPainter extends CustomPainter {
       ..color = Colors.white;
 
     for (var entry in touches.entries) {
-      circlePaint.color = touchColors[entry.key % touchColors.length];
-      strokePaint.color = touchColors[entry.key % touchColors.length];
+      circlePaint.color = entry.key.userToColor();
+      strokePaint.color = entry.key.userToColor();
 
-      canvas.drawCircle(entry.value, 50, circlePaint); // Draw a circle at each touch
-      canvas.drawCircle(entry.value, 60, strokePaint); // Draw a stroke at each touch
+      canvas.drawCircle(
+          entry.value, 50, circlePaint); // Draw a circle at each touch
+      canvas.drawCircle(
+          entry.value, 60, strokePaint); // Draw a stroke at each touch
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+extension Coloring on int {
+  Color userToColor() {
+    return TouchPainter.touchColors[this % TouchPainter.touchColors.length];
+  }
 }
