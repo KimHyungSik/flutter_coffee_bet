@@ -4,6 +4,8 @@ import 'package:coffee_bet/touch_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'game_over.dart';
+
 void main() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   runApp(const GuessingGameApp());
@@ -35,6 +37,14 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   // Map to store active touches (pointer ID → position)
   final Map<int, Offset> _activeTouches = {};
+  final Map<int, DateTime> _releaseTimes = {}; // Finger release times
+
+  static const int MAX_GAME_PLAY = 5;
+
+  bool _isGameActive = false; // Tracks if the game has started
+  int _lastFailingPointer = -1; // Pointer ID of the failing player
+  bool _isGameOver = false; // Tracks if the game has ended
+  int? _failingPointer;
 
   bool _isCountingDown = false; // Tracks if the countdown has started
   int _countdown = 3; // Countdown timer value
@@ -66,11 +76,16 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ),
               ),
+            if (_isGameOver)
+              GameOverWidget(
+                onRestart: _restartGame,
+              ),
           ],
         ));
   }
-
   void _handlePointerDown(PointerDownEvent event) {
+    if (_isGameActive || _activeTouches.length >= MAX_GAME_PLAY) return;
+
     setState(() {
       _activeTouches[event.pointer] = _getLocalPosition(event);
     });
@@ -78,6 +93,10 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handlePointerMove(PointerMoveEvent event) {
+    if (!_activeTouches.containsKey(event.pointer)) {
+      return; // Prevent new players from moving their circle after game starts
+    }
+
     setState(() {
       _activeTouches[event.pointer] = _getLocalPosition(event);
     });
@@ -87,6 +106,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _activeTouches.remove(event.pointer);
     });
+    _checkGameEnd();
   }
 
   Offset _getLocalPosition(PointerEvent event) {
@@ -95,17 +115,17 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _checkStartCountdown() {
-    if (_activeTouches.length >= 3 && !_isCountingDown) {
+    if (_activeTouches.length >= 3 && !_isCountingDown && !_isGameActive) {
       setState(() {
         _isCountingDown = true;
-        _countdown = 3; // Reset countdown
+        _countdown = 3;
       });
       _startCountdown();
     }
   }
 
   void _startCountdown() {
-    _countdownTimer?.cancel(); // Cancel any existing timer
+    _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _countdown--;
@@ -113,17 +133,33 @@ class _GameScreenState extends State<GameScreen> {
 
       if (_countdown <= 0) {
         timer.cancel();
-        _onCountdownComplete();
+        setState(() {
+          _isCountingDown = false;
+          _isGameActive = true;
+        });
       }
     });
   }
 
-  void _onCountdownComplete() {
+  void _checkGameEnd() {
+    if (_activeTouches.isEmpty && _isGameActive) {
+      // Last player fails
+      setState(() {
+        _isGameOver = true;
+        _failingPointer = null; // No specific pointer fails, everyone loses.
+      });
+    }
+  }
+
+  void _restartGame() {
     setState(() {
+      _activeTouches.clear();
       _isCountingDown = false;
-      // Logic to start the game goes here
+      _isGameActive = false;
+      _isGameOver = false;
+      _failingPointer = null;
+      _countdown = 3;
     });
-    print("Game Started!");
   }
 
   @override
