@@ -150,9 +150,9 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  void _checkGameEnd() {
+  Future<void> _checkGameEnd() async {
     if (_isGameActive) {
-      if (_checkSimultaneousReleases()) {
+      if (await _checkSimultaneousReleases()) {
         return;
       }
       // Last player fails
@@ -168,15 +168,16 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  bool _checkSimultaneousReleases() {
+  Future<bool> _checkSimultaneousReleases() async {
     // If fewer than two releases, no simultaneous check is needed
+    await Future.delayed(const Duration(milliseconds: 100));
     if (_releaseTimes.length < 2 && _isGameActive) return false;
 
     List<int> simultaneousFailures =
         []; // Store the pointer IDs of failed players
     List<int> releaseKeys = _releaseTimes.keys.toList();
 
-    for (int i = 0; i < releaseKeys.length - 1; i++) {
+    for (int i = 0; i < releaseKeys.length; i++) {
       for (int j = 0; j < releaseKeys.length; j++) {
         if(i == j) break;
         final int pointer1 = releaseKeys[i];
