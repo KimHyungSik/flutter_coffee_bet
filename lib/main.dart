@@ -43,7 +43,6 @@ class _GameScreenState extends State<GameScreen> {
   static const int MAX_GAME_PLAY = 5;
 
   bool _isGameActive = false; // Tracks if the game has started
-  int _lastFailingPointer = -1; // Pointer ID of the failing player
   bool _isGameOver = false; // Tracks if the game has ended
   Map<int, Offset>? _failingPointer;
 
@@ -82,6 +81,18 @@ class _GameScreenState extends State<GameScreen> {
               GameOverWidget(
                 onRestart: _restartGame,
                 failingPointers: _failingPointer ?? {},
+              ),
+            if(!_isCountingDown && !_isGameActive && !_isGameOver)
+              const Center(
+                child: Text(
+                  '3명 이상\n동시에 터치 해주세요.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
           ],
         ));
@@ -145,6 +156,8 @@ class _GameScreenState extends State<GameScreen> {
         setState(() {
           _isCountingDown = false;
           _isGameActive = true;
+          _releaseTimes.clear();
+          _releaseOffset.clear();
         });
       }
     });
