@@ -26,15 +26,44 @@ class GameOverWidget extends StatelessWidget {
                 const Text(
                   'Game Over!',
                   style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 50,
+                    color: Colors.redAccent,
+                    fontSize: 60,
                     fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2, 2),
+                        blurRadius: 10,
+                        color: Colors.black54,
+                      ),
+                      Shadow(
+                        offset: Offset(-2, -2),
+                        blurRadius: 10,
+                        color: Colors.black38,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: onRestart,
-                  child: const Text('Restart'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 8,
+                    shadowColor: Colors.black54,
+                  ),
+                  child: const Text(
+                    '다시 하기',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
                 ),
               ],
             ),
