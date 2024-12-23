@@ -67,13 +67,16 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ),
             if (_isCountingDown)
-              Center(
-                child: Text(
-                  '$_countdown',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
+              IgnorePointer(
+                ignoring: true,
+                child:   Center(
+                  child: Text(
+                    '$_countdown',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -83,14 +86,17 @@ class _GameScreenState extends State<GameScreen> {
                 failingPointers: _failingPointer ?? {},
               ),
             if(!_isCountingDown && !_isGameActive && !_isGameOver)
-              const Center(
-                child: Text(
-                  '3명 이상\n동시에 터치 해주세요.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+              const IgnorePointer(
+                ignoring: true,
+                child:  Center(
+                  child: Text(
+                    '3명 이상\n동시에 터치 해주세요.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
