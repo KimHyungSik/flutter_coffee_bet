@@ -38,6 +38,7 @@ class _GameScreenState extends State<GameScreen> {
   // Map to store active touches (pointer ID → position)
   final Map<int, Offset> _activeTouches = {};
   final Map<int, DateTime> _releaseTimes = {}; // Finger release times
+  final Map<int, Offset> _releaseOffset = {};
 
   static const int MAX_GAME_PLAY = 5;
 
@@ -56,15 +57,16 @@ class _GameScreenState extends State<GameScreen> {
         backgroundColor: Colors.grey[900],
         body: Stack(
           children: [
-            Listener(
-              onPointerDown: _handlePointerDown,
-              onPointerMove: _handlePointerMove,
-              onPointerUp: _handlePointerUp,
-              child: CustomPaint(
-                painter: UserCirclePainter(_activeTouches),
-                child: Container(), // Covers the entire screen
+            if (!_isGameOver)
+              Listener(
+                onPointerDown: _handlePointerDown,
+                onPointerMove: _handlePointerMove,
+                onPointerUp: _handlePointerUp,
+                child: CustomPaint(
+                  painter: UserCirclePainter(_activeTouches),
+                  child: Container(), // Covers the entire screen
+                ),
               ),
-            ),
             if (_isCountingDown)
               Center(
                 child: Text(
@@ -86,6 +88,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handlePointerDown(PointerDownEvent event) {
+    if (_isGameOver && _isGameActive) return;
     if (_isGameActive || _activeTouches.length >= MAX_GAME_PLAY) return;
 
     setState(() {
@@ -95,6 +98,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handlePointerMove(PointerMoveEvent event) {
+    if (_isGameOver) return;
     if (!_activeTouches.containsKey(event.pointer)) {
       return; // Prevent new players from moving their circle after game starts
     }
@@ -105,7 +109,10 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handlePointerUp(PointerUpEvent event) {
+    if(_activeTouches[event.pointer] == null) return;
     setState(() {
+      _releaseTimes[event.pointer] = DateTime.now();
+      _releaseOffset[event.pointer] = _activeTouches[event.pointer]!;
       _activeTouches.remove(event.pointer);
     });
     _checkGameEnd();
@@ -145,16 +152,64 @@ class _GameScreenState extends State<GameScreen> {
 
   void _checkGameEnd() {
     if (_isGameActive) {
+      if (_checkSimultaneousReleases()) {
+        return;
+      }
       // Last player fails
       if (_activeTouches.length == 1) {
         setState(() {
           _isGameOver = true;
+          _isGameActive = false;
           _failingPointer = {
             _activeTouches.keys.first: _activeTouches.values.first
           }; // No specific pointer fails, everyone loses.
         });
       }
     }
+  }
+
+  bool _checkSimultaneousReleases() {
+    // If fewer than two releases, no simultaneous check is needed
+    if (_releaseTimes.length < 2 && _isGameActive) return false;
+
+    List<int> simultaneousFailures =
+        []; // Store the pointer IDs of failed players
+    List<int> releaseKeys = _releaseTimes.keys.toList();
+
+    for (int i = 0; i < releaseKeys.length - 1; i++) {
+      for (int j = 0; j < releaseKeys.length; j++) {
+        if(i == j) break;
+        final int pointer1 = releaseKeys[i];
+        final int pointer2 = releaseKeys[j];
+        final DateTime time1 = _releaseTimes[pointer1]!;
+        final DateTime time2 = _releaseTimes[pointer2]!;
+
+        // Check if the releases are within 0.5 seconds of each other
+        if (time2.difference(time1).inMilliseconds.abs() <= 500) {
+          if (!simultaneousFailures.contains(pointer1)) {
+            simultaneousFailures.add(pointer1);
+          }
+          if (!simultaneousFailures.contains(pointer2)) {
+            simultaneousFailures.add(pointer2);
+          }
+        }
+      }
+    }
+
+    // Handle simultaneous failures
+    if (simultaneousFailures.isNotEmpty) {
+      Map<int, Offset> simultaneousFailureUsers = {
+        for (var key in simultaneousFailures)
+          if (_releaseOffset.containsKey(key)) key: _releaseOffset[key]!,
+      };
+      setState(() {
+        _isGameOver = true; // End the game
+        _isGameActive = false;
+        _failingPointer =
+            simultaneousFailureUsers; // No specific single failure
+      });
+    }
+    return simultaneousFailures.isNotEmpty;
   }
 
   void _restartGame() {
@@ -165,6 +220,8 @@ class _GameScreenState extends State<GameScreen> {
       _isGameOver = false;
       _failingPointer = null;
       _countdown = 3;
+      _releaseTimes.clear();
+      _releaseOffset.clear();
     });
   }
 
