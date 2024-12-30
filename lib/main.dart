@@ -205,7 +205,7 @@ class _GameScreenState extends State<GameScreen> {
         final DateTime time2 = _releaseTimes[pointer2]!;
 
         // Check if the releases are within 0.5 seconds of each other
-        if (time2.difference(time1).inMilliseconds.abs() <= 500) {
+        if (time2.difference(time1).inMilliseconds.abs() <= 100) {
           if (!simultaneousFailures.contains(pointer1)) {
             simultaneousFailures.add(pointer1);
           }
