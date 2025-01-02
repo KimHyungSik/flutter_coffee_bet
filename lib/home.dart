@@ -1,3 +1,4 @@
+import 'package:coffee_bet/guessing_game/guessing_game.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,7 +21,12 @@ class HomeScreen extends StatelessWidget {
                   width: 24,
                 ),
                 _homeButton(onTap: () {}, title: "랜덤게임"),
-                _homeButton(onTap: () {}, title: "눈치게임"),
+                _homeButton(onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GuessingGameApp()),
+                  );
+                }, title: "눈치게임"),
                 const SizedBox(
                   width: 24,
                 ),

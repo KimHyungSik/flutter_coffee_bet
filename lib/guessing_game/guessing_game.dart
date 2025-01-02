@@ -10,14 +10,7 @@ class GuessingGameApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Guessing Game',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const GameScreen(),
-      debugShowCheckedModeBanner: false,
-    );
+      return const GameScreen();
   }
 }
 
@@ -47,8 +40,9 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[900],
-        body: Stack(
+      backgroundColor: Colors.grey[900],
+      body: SafeArea(
+        child: Stack(
           children: [
             if (!_isGameOver)
               Listener(
@@ -63,7 +57,7 @@ class _GameScreenState extends State<GameScreen> {
             if (_isCountingDown)
               IgnorePointer(
                 ignoring: true,
-                child:   Center(
+                child: Center(
                   child: Text(
                     '$_countdown',
                     style: const TextStyle(
@@ -79,23 +73,45 @@ class _GameScreenState extends State<GameScreen> {
                 onRestart: _restartGame,
                 failingPointers: _failingPointer ?? {},
               ),
-            if(!_isCountingDown && !_isGameActive && !_isGameOver)
-              const IgnorePointer(
-                ignoring: true,
-                child:  Center(
-                  child: Text(
-                    '3명 이상\n동시에 터치 해주세요.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+            if (!_isCountingDown && !_isGameActive && !_isGameOver)
+              Stack(
+                children: [
+                  const IgnorePointer(
+                    ignoring: true,
+                    child: Center(
+                      child: Text(
+                        '3명 이상\n동시에 터치 해주세요.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, left: 8),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        iconSize: 36,
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   void _handlePointerDown(PointerDownEvent event) {
@@ -120,7 +136,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handlePointerUp(PointerUpEvent event) {
-    if(_activeTouches[event.pointer] == null) return;
+    if (_activeTouches[event.pointer] == null) return;
     setState(() {
       _releaseTimes[event.pointer] = DateTime.now();
       _releaseOffset[event.pointer] = _activeTouches[event.pointer]!;
@@ -187,12 +203,12 @@ class _GameScreenState extends State<GameScreen> {
     if (_releaseTimes.length < 2 && _isGameActive) return false;
 
     List<int> simultaneousFailures =
-    []; // Store the pointer IDs of failed players
+        []; // Store the pointer IDs of failed players
     List<int> releaseKeys = _releaseTimes.keys.toList();
 
     for (int i = 0; i < releaseKeys.length; i++) {
       for (int j = 0; j < releaseKeys.length; j++) {
-        if(i == j) break;
+        if (i == j) break;
         final int pointer1 = releaseKeys[i];
         final int pointer2 = releaseKeys[j];
         final DateTime time1 = _releaseTimes[pointer1]!;
