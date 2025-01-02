@@ -6,10 +6,15 @@ import 'package:flutter/services.dart';
 
 import 'game_over.dart';
 import 'guessing_game/guessing_game.dart';
+import 'home.dart';
 
 void main() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-  runApp(const GuessingGameApp());
+  runApp(
+      const MaterialApp(
+        home: HomeScreen()
+      )
+  );
 }
 
 
