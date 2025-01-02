@@ -10,6 +10,7 @@ class GameOverWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("LOGEE $failingPointers");
     return Container(
       color: Colors.black.withOpacity(0.7),
       child: Center(
