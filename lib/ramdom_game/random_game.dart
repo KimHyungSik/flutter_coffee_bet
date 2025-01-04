@@ -30,22 +30,13 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   bool _isCountingDown = false;
   bool _isGameActive = false;
   bool _isGameOver = false; // Tracks if the game has ended
-  bool _isRandomizing = false;
+  bool _painterVisible = true;
   int _countdown = 3;
   int? _selectedPointer; // Randomly selected pointer ID
   Map<int, Offset> _failingPointer = {};
 
   Timer? _randomizationTimer;
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    )..repeat(reverse: true); // Makes the animation repeat for the flashing effect
-  }
+  Timer? _blankTimer;
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +45,19 @@ class _RandomGameScreenState extends State<RandomGameScreen>
       body: SafeArea(
         child: Stack(
           children: [
-            Listener(
-              onPointerDown: _handlePointerDown,
-              onPointerMove: _handlePointerMove,
-              onPointerUp: _handlePointerUp,
-              child: CustomPaint(
-                painter: UserCirclePainter(_activeTouches),
-                child: Container(), // Covers the entire screen
+            if(_painterVisible)
+              Listener(
+                onPointerDown: _handlePointerDown,
+                onPointerMove: _handlePointerMove,
+                onPointerUp: _handlePointerUp,
+                child: CustomPaint(
+                  painter: UserCirclePainter(_activeTouches),
+                  child: Container(), // Covers the entire screen
+                ),
               ),
-            ),
             if (_isGameOver)
               GameOverWidget(
+                title: "당첨!",
                 onRestart: _restartGame,
                 failingPointers: _failingPointer ?? {},
               ),
@@ -89,7 +82,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                     ignoring: true,
                     child: Center(
                       child: Text(
-                        'Touch and hold\nwith at least 2 fingers!',
+                        '2명 이상\n동시에 터치 해주세요.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -163,7 +156,14 @@ class _RandomGameScreenState extends State<RandomGameScreen>
         _countdown = 3;
       });
       _startCountdown();
+      _blankPainter();
     }
+  }
+
+  void _blankPainter() {
+    _blankTimer = Timer.periodic(const Duration(seconds: 400), (timer) {
+      _painterVisible = !_painterVisible;
+    });
   }
 
   void _startCountdown() {
@@ -179,7 +179,6 @@ class _RandomGameScreenState extends State<RandomGameScreen>
           _failingPointer.clear();
           _isCountingDown = false;
           _isGameActive = true;
-          _isRandomizing = true;
         });
         _randomizeUser();
       }
@@ -187,6 +186,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   }
 
   void _stopRandomizationTimer() {
+    _blankTimer = null;
     _randomizationTimer?.cancel();
     _randomizationTimer = null;
   }
@@ -194,20 +194,16 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   void _randomizeUser() async {
     if (_activeTouches.isEmpty) return;
 
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        final random = Random();
-        final keys = _activeTouches.keys.toList();
-        _selectedPointer = keys[random.nextInt(keys.length)];
-        _isRandomizing = false;
+    setState(() {
+      final random = Random();
+      final keys = _activeTouches.keys.toList();
+      _selectedPointer = keys[random.nextInt(keys.length)];
 
-        // Remove all other circles except the selected one
-        _failingPointer![_selectedPointer!] = _activeTouches[_selectedPointer!]!;
-        print("LOGEE 1 _failingPointer  $_failingPointer");
-        _activeTouches.clear();
-        _isGameOver = true;
-        _isGameActive = false;
-      });
+      // Remove all other circles except the selected one
+      _failingPointer![_selectedPointer!] = _activeTouches[_selectedPointer!]!;
+      _activeTouches.clear();
+      _isGameOver = true;
+      _isGameActive = false;
     });
   }
 
@@ -223,7 +219,6 @@ class _RandomGameScreenState extends State<RandomGameScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
     _randomizationTimer?.cancel();
     super.dispose();
   }

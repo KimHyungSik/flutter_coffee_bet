@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class GameOverWidget extends StatelessWidget {
   final VoidCallback onRestart;
   final Map<int, Offset> failingPointers;
+  final String title;
 
   const GameOverWidget(
-      {super.key, required this.onRestart, required this.failingPointers});
+      {super.key, required this.onRestart, required this.failingPointers, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    print("LOGEE $failingPointers");
     return Container(
       color: Colors.black.withOpacity(0.7),
       child: Center(
@@ -24,9 +24,9 @@ class GameOverWidget extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Game Over!',
-                  style: TextStyle(
+                Text(
+                  title,
+                  style: const TextStyle(
                     color: Colors.redAccent,
                     fontSize: 60,
                     fontWeight: FontWeight.bold,

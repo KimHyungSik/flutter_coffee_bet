@@ -10,7 +10,7 @@ class GuessingGameApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return const GameScreen();
+    return const GameScreen();
   }
 }
 
@@ -70,6 +70,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
             if (_isGameOver)
               GameOverWidget(
+                title: 'Game Over!',
                 onRestart: _restartGame,
                 failingPointers: _failingPointer ?? {},
               ),
