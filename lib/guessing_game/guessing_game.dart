@@ -70,7 +70,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
             if (_isGameOver)
               GameOverWidget(
-                title: 'Game Over!',
+                title: '당첨!',
                 onRestart: _restartGame,
                 failingPointers: _failingPointer ?? {},
               ),
