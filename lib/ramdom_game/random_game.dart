@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../game_over.dart';
@@ -45,7 +46,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
       body: SafeArea(
         child: Stack(
           children: [
-            if(_painterVisible)
+            if (_painterVisible)
               Listener(
                 onPointerDown: _handlePointerDown,
                 onPointerMove: _handlePointerMove,
@@ -78,13 +79,14 @@ class _RandomGameScreenState extends State<RandomGameScreen>
             if (!_isCountingDown && !_isGameActive && !_isGameOver)
               Stack(
                 children: [
-                  const IgnorePointer(
+                  IgnorePointer(
                     ignoring: true,
                     child: Center(
                       child: Text(
-                        '2명 이상\n동시에 터치 해주세요.',
+                        context.tr(
+                            "Please_touch_2_or_more_people_at_the_same_time."),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
