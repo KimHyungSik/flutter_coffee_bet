@@ -2,7 +2,7 @@
   "Loser" : "당첨!",
   "Please_touch_3_or_more_people_at_the_same_time." : "3명 이상\n동시에 터치 해주세요.",
   "Please_touch_2_or_more_people_at_the_same_time." : "2명 이상\n동시에 터치 해주세요.",
-  "Random_Game" : "랜덤 게임",
-  "Sense_Game" : "눈치 게임",
+  "Random_Game": "🎲 랜덤 게임",
+  "Sense_Game": "👀 눈치 게임",
   "Game_again" : "다시하기"
 }
