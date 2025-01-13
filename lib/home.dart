@@ -13,80 +13,74 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Align(
           alignment: const AlignmentDirectional(0, 0),
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 16,
-              children: [
-                const SizedBox(
-                  width: 24,
-                ),
-                _homeButton(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RandomGameApp()),
-                    );
-                  },
-                  title: context.tr("Random_Game"),
-                ),
-                _homeButton(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 16,
+                children: [
+                  _homeButton(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const GuessingGameApp()),
+                            builder: (context) => const RandomGameApp()),
                       );
                     },
-                    title: context.tr("Sense_Game")),
-                const SizedBox(
-                  width: 24,
-                ),
-              ]),
+                    title: context.tr("Random_Game"),
+                  ),
+                  _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GuessingGameApp()),
+                        );
+                      },
+                      title: context.tr("Sense_Game")),
+                ]),
+          ),
         ),
       ),
     );
   }
 
   Widget _homeButton({required Function() onTap, required String title}) {
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF434343),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    color: Colors.yellow,
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF434343),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  color: Colors.yellow,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 14, 0, 10),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 14, 0, 10),
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
