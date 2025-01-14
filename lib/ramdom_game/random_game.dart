@@ -148,7 +148,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
               height: 68,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
+                color: Colors.red,
               ),
               child: IconButton(
                 onPressed: () {
@@ -187,6 +187,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                       ),
                       Text(
                         '$_failingCount',
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 30,
