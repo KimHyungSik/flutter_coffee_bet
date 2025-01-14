@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../game_over.dart';
 import '../user_circle_painter.dart';
@@ -103,7 +104,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(bottom: 20),
                             child: _buildFailingCountAdjuster(),
                           ),
                         ),
@@ -138,43 +139,86 @@ class _RandomGameScreenState extends State<RandomGameScreen>
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  if (_failingCount > 1) {
-                    _failingCount--;
-                  }
-                });
-              },
-              icon: const Icon(Icons.remove, color: Colors.white),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Text(
-              '$_failingCount',
-              style: const TextStyle(
+            Container(
+              width: 68,
+              height: 68,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
                 color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (_failingCount > 1) {
+                      _failingCount--;
+                    }
+                  });
+                },
+                  icon: SvgPicture.asset(
+                    'assets/icon/icon_minus.svg',
+                    colorFilter: const ColorFilter.mode(Color(0xFF212121), BlendMode.srcIn),
+                  )
               ),
             ),
-            const SizedBox(
-              width: 16,
+            const SizedBox(width: 8,),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Color(0xFF121212),
+                ),
+                height: 88,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "당첨자 수",
+                        style: TextStyle(
+                          color: Color(0xFFcfcfcf),
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        '$_failingCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  if (_failingCount < 5) {
-                    _failingCount++;
-                  }
-                });
-              },
-              icon: const Icon(Icons.add, color: Colors.white),
+            const SizedBox(width: 8,),
+            Container(
+              width: 68,
+              height: 68,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (_failingCount < 5) {
+                      _failingCount++;
+                    }
+                  });
+                },
+                icon: SvgPicture.asset(
+                  'assets/icon/icon_plus.svg',
+                  colorFilter: const ColorFilter.mode(Color(0xFF212121), BlendMode.srcIn),
+                )
+              ),
             ),
           ],
         ),
