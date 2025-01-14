@@ -33,6 +33,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   bool _isGameOver = false; // Tracks if the game has ended
   bool _painterVisible = true;
   int _countdown = 3;
+  int _failingCount = 1;
   int? _selectedPointer; // Randomly selected pointer ID
   Map<int, Offset> _failingPointer = {};
 
@@ -79,19 +80,34 @@ class _RandomGameScreenState extends State<RandomGameScreen>
             if (!_isCountingDown && !_isGameActive && !_isGameOver)
               Stack(
                 children: [
-                  IgnorePointer(
-                    ignoring: true,
-                    child: Center(
-                      child: Text(
-                        context.tr(
-                            "Please_touch_2_or_more_people_at_the_same_time."),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+                  Container(
+                    alignment: Alignment.center,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: Text(
+                              context.tr(
+                                  "Please_touch_2_or_more_people_at_the_same_time."),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _buildFailingCountAdjuster(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -112,6 +128,54 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                   ),
                 ],
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFailingCountAdjuster() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_failingCount > 1) {
+                    _failingCount--;
+                  }
+                });
+              },
+              icon: const Icon(Icons.remove, color: Colors.white),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Text(
+              '$_failingCount',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_failingCount < 5) {
+                    _failingCount++;
+                  }
+                });
+              },
+              icon: const Icon(Icons.add, color: Colors.white),
+            ),
           ],
         ),
       ),
@@ -141,8 +205,8 @@ class _RandomGameScreenState extends State<RandomGameScreen>
       _activeTouches.remove(event.pointer);
     });
 
-    if (_activeTouches.isEmpty) {
-      _stopRandomizationTimer();
+    if (_activeTouches.isEmpty && !_isGameOver) {
+      _restartGame();
     }
   }
 
@@ -171,9 +235,15 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   void _startCountdown() {
     _randomizationTimer?.cancel();
     _randomizationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _countdown--;
-      });
+      if (_activeTouches.isEmpty) {
+        _restartGame();
+      } else {
+        setState(
+          () {
+            _countdown--;
+          },
+        );
+      }
 
       if (_countdown <= 0) {
         timer.cancel();
@@ -199,10 +269,27 @@ class _RandomGameScreenState extends State<RandomGameScreen>
     setState(() {
       final random = Random();
       final keys = _activeTouches.keys.toList();
-      _selectedPointer = keys[random.nextInt(keys.length)];
+      // 선택할 유저 수를 제한
+      int count = _failingCount.clamp(1, keys.length);
+      List<int> selectedKeys = [];
+      while (selectedKeys.length < count) {
+        final randomKey = keys[random.nextInt(keys.length)];
+        if (!selectedKeys.contains(randomKey)) {
+          selectedKeys.add(randomKey);
+        }
+      }
+
+      for (var key in selectedKeys) {
+        _failingPointer[key] = _activeTouches[key]!;
+      }
+
+      for (var key in selectedKeys) {
+        _failingPointer[key] = _activeTouches[key]!;
+      }
+      // _selectedPointer = keys[random.nextInt(keys.length)];
 
       // Remove all other circles except the selected one
-      _failingPointer![_selectedPointer!] = _activeTouches[_selectedPointer!]!;
+      // _failingPointer![_selectedPointer!] = _activeTouches[_selectedPointer!]!;
       _activeTouches.clear();
       _isGameOver = true;
       _isGameActive = false;
@@ -210,6 +297,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   }
 
   void _restartGame() {
+    _stopRandomizationTimer();
     setState(() {
       _activeTouches.clear();
       _isCountingDown = false;
