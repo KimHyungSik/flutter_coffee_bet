@@ -148,7 +148,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
               height: 68,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.red,
+                color: Colors.white,
               ),
               child: IconButton(
                 onPressed: () {
