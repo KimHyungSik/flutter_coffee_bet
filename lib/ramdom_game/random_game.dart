@@ -151,20 +151,22 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                 color: Colors.white,
               ),
               child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (_failingCount > 1) {
-                      _failingCount--;
-                    }
-                  });
-                },
+                  onPressed: () {
+                    setState(() {
+                      if (_failingCount > 1) {
+                        _failingCount--;
+                      }
+                    });
+                  },
                   icon: SvgPicture.asset(
                     'assets/icon/icon_minus.svg',
-                    colorFilter: const ColorFilter.mode(Color(0xFF212121), BlendMode.srcIn),
-                  )
-              ),
+                    colorFilter: const ColorFilter.mode(
+                        Color(0xFF212121), BlendMode.srcIn),
+                  )),
             ),
-            const SizedBox(width: 8,),
+            const SizedBox(
+              width: 8,
+            ),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -173,13 +175,14 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                 ),
                 height: 88,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "당첨자 수",
-                        style: TextStyle(
+                      Text(
+                        context.tr("Number_of_Loser"),
+                        style: const TextStyle(
                           color: Color(0xFFcfcfcf),
                           fontSize: 13,
                           fontWeight: FontWeight.normal,
@@ -199,7 +202,9 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                 ),
               ),
             ),
-            const SizedBox(width: 8,),
+            const SizedBox(
+              width: 8,
+            ),
             Container(
               width: 68,
               height: 68,
@@ -208,18 +213,18 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                 color: Colors.white,
               ),
               child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (_failingCount < 5) {
-                      _failingCount++;
-                    }
-                  });
-                },
-                icon: SvgPicture.asset(
-                  'assets/icon/icon_plus.svg',
-                  colorFilter: const ColorFilter.mode(Color(0xFF212121), BlendMode.srcIn),
-                )
-              ),
+                  onPressed: () {
+                    setState(() {
+                      if (_failingCount < 5) {
+                        _failingCount++;
+                      }
+                    });
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/icon/icon_plus.svg',
+                    colorFilter: const ColorFilter.mode(
+                        Color(0xFF212121), BlendMode.srcIn),
+                  )),
             ),
           ],
         ),
