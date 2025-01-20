@@ -213,18 +213,19 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                 color: Colors.white,
               ),
               child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_failingCount < 5) {
-                        _failingCount++;
-                      }
-                    });
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/icon/icon_plus.svg',
-                    colorFilter: const ColorFilter.mode(
-                        Color(0xFF212121), BlendMode.srcIn),
-                  )),
+                onPressed: () {
+                  setState(() {
+                    if (_failingCount < 5) {
+                      _failingCount++;
+                    }
+                  });
+                },
+                icon: SvgPicture.asset(
+                  'assets/icon/icon_plus.svg',
+                  colorFilter: const ColorFilter.mode(
+                      Color(0xFF212121), BlendMode.srcIn),
+                ),
+              ),
             ),
           ],
         ),

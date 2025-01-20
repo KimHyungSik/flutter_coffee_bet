@@ -1,5 +1,6 @@
 import 'package:coffee_bet/guessing_game/guessing_game.dart';
 import 'package:coffee_bet/ramdom_game/random_game.dart';
+import 'package:coffee_bet/touch_roulette/touch_roulette_game.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -39,15 +40,26 @@ class HomeScreen extends StatelessWidget {
                         title: context.tr("Random_Game"),
                       ),
                       _homeButton(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const GuessingGameApp()),
-                            );
-                          },
-                          title: context.tr("Sense_Game")),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const GuessingGameApp()),
+                          );
+                        },
+                        title: context.tr("Sense_Game"),
+                      ),
+                      _homeButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TouchRouletteGame(),
+                            ),
+                          );
+                        },
+                        title: "터치 룰렛",
+                      ),
                     ]),
               ),
             ),
