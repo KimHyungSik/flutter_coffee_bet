@@ -2,6 +2,10 @@ import 'package:coffee_bet/guessing_game/guessing_game.dart';
 import 'package:coffee_bet/ramdom_game/random_game.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'admob/banner_adb.dart';
+import 'admob/full_width_banner.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,39 +14,56 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: SafeArea(
-        child: Align(
-          alignment: const AlignmentDirectional(0, 0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 16,
-                children: [
-                  _homeButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RandomGameApp()),
-                      );
-                    },
-                    title: context.tr("Random_Game"),
-                  ),
-                  _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const GuessingGameApp()),
-                        );
-                      },
-                      title: context.tr("Sense_Game")),
-                ]),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: const AlignmentDirectional(0, 0),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 16,
+                    children: [
+                      _homeButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RandomGameApp()),
+                          );
+                        },
+                        title: context.tr("Random_Game"),
+                      ),
+                      _homeButton(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const GuessingGameApp()),
+                            );
+                          },
+                          title: context.tr("Sense_Game")),
+                    ]),
+              ),
+            ),
           ),
-        ),
+          AdManager.instance.homeBannerAd == null
+              ? Container()
+              : SizedBox(
+                  width: AdManager.instance.homeBannerAd!.sizes.first.width
+                      .toDouble(),
+                  height: AdManager.instance.homeBannerAd!.sizes.first.height
+                      .toDouble(),
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: AdWidget(ad: AdManager.instance.homeBannerAd!)),
+                ),
+        ],
       ),
     );
   }
