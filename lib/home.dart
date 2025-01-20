@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        title: "터치 룰렛",
+                        title: context.tr("Touch_Roulette"),
                       ),
                     ]),
               ),
