@@ -15,8 +15,6 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
-	<key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-3749644430343897~4038961169</string>
 	<array>
 		<string>en</string>
 		<string>de</string>
@@ -27,6 +25,8 @@
 		<string>th</string>
 		<string>vi</string>
 	</array>
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-3749644430343897~4038961169</string>
 	<key>CFBundleName</key>
 	<string>coffee_bet</string>
 	<key>CFBundlePackageType</key>
