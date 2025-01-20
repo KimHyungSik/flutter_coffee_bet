@@ -42,76 +42,75 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: SafeArea(
-        child: Stack(
-          children: [
-            if (!_isGameOver)
-              Listener(
-                onPointerDown: _handlePointerDown,
-                onPointerMove: _handlePointerMove,
-                onPointerUp: _handlePointerUp,
-                child: CustomPaint(
-                  painter: UserCirclePainter(_activeTouches),
-                  child: Container(), // Covers the entire screen
-                ),
+      body: Stack(
+        children: [
+          if (!_isGameOver)
+            Listener(
+              onPointerDown: _handlePointerDown,
+              onPointerMove: _handlePointerMove,
+              onPointerUp: _handlePointerUp,
+              child: CustomPaint(
+                painter: UserCirclePainter(_activeTouches),
+                child: Container(), // Covers the entire screen
               ),
-            if (_isCountingDown)
-              IgnorePointer(
-                ignoring: true,
-                child: Center(
-                  child: Text(
-                    '$_countdown',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 80,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+          if (_isCountingDown)
+            IgnorePointer(
+              ignoring: true,
+              child: Center(
+                child: Text(
+                  '$_countdown',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 80,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            if (_isGameOver)
-              GameOverWidget(
-                title: context.tr("Loser"),
-                onRestart: _restartGame,
-                failingPointers: _failingPointer ?? {},
-              ),
-            if (!_isCountingDown && !_isGameActive && !_isGameOver)
-              Stack(
-                children: [
-                  IgnorePointer(
-                    ignoring: true,
-                    child: Center(
-                      child: Text(
-                        context.tr("Please_touch_3_or_more_people_at_the_same_time."),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
+            ),
+          if (_isGameOver)
+            GameOverWidget(
+              title: context.tr("Loser"),
+              onRestart: _restartGame,
+              failingPointers: _failingPointer ?? {},
+            ),
+          if (!_isCountingDown && !_isGameActive && !_isGameOver)
+            Stack(
+              children: [
+                IgnorePointer(
+                  ignoring: true,
+                  child: Center(
+                    child: Text(
+                      context.tr(
+                          "Please_touch_3_or_more_people_at_the_same_time."),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8, left: 8),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        iconSize: 36,
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 40, left: 8),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      iconSize: 36,
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
                       ),
                     ),
-                  )
-                ],
-              )
-          ],
-        ),
+                  ),
+                )
+              ],
+            )
+        ],
       ),
     );
   }
