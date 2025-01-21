@@ -33,7 +33,7 @@ AdManagerBannerAd _loadBannerAd() {
           ? 'ca-app-pub-3940256099942544/9214589741'
           : 'ca-app-pub-3940256099942544/2435281174'
       : Platform.isAndroid
-          ? 'ca-app-pub-3749644430343897/7043069462'
+          ? 'ca-app-pub-3749644430343897/1482926499'
           : 'ca-app-pub-3749644430343897/2370462752';
 
   return AdManagerBannerAd(
