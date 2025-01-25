@@ -8,6 +8,10 @@ class UserCirclePainter extends CustomPainter {
     Colors.blue,
     Colors.yellow,
     Colors.purple,
+    Colors.orange,
+    Colors.pink,
+    Colors.cyan,
+    Colors.brown
   ];
 
   UserCirclePainter(this.users);
