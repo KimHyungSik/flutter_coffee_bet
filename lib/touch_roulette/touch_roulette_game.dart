@@ -22,7 +22,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   bool _isGameOver = false;
   Color? _backgroundColor = baseBackgroundColor;
 
-  int _winnerChance = 30; // Initial chance of winning 30%
+  int _winnerChance = 20; // Initial chance of winning 30%
   final Map<int, Offset> _activeTouches = {};
   final Random _random = Random();
 
