@@ -6,5 +6,7 @@
   "Sense_Game": "👀 Sinn-Spiel",
   "Game_again": "Erneut Spielen",
   "Number_of_Loser": "Anzahl der Gewinner",
-  "Touch_Roulette": "🧨 Spiel auswählen"
+  "Touch_Roulette": "🧨 Spiel auswählen",
+  "Please_touch_in_order" : "Bitte berühren, um",
+  "Odds_of_winning" : "Gewinnchancen"
 }

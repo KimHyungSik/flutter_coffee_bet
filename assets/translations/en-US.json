@@ -6,5 +6,7 @@
   "Sense_Game": "👀 Sense Game",
   "Game_again": "Play Again",
   "Number_of_Loser": "Number of Loser",
-  "Touch_Roulette": "🧨 Pick game"
+  "Touch_Roulette": "🧨 Pick game",
+  "Please_touch_in_order" : "Please touch in order",
+  "Odds_of_winning" : "Odds of losing"
 }

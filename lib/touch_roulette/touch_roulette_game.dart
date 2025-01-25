@@ -45,8 +45,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
               onRestart: _restartGame,
               failingPointers: {},
             ),
-          if (!_isGameActive)
-            readyGame(context),
+          if (!_isGameActive) readyGame(context),
         ],
       ),
     );
@@ -54,65 +53,67 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
 
   Stack readyGame(BuildContext context) {
     return Stack(
+      children: [
+        Container(
+          alignment: Alignment.center,
+          child: Stack(
             children: [
-              Container(
+              Align(
                 alignment: Alignment.center,
-                child: Stack(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IgnorePointer(
-                            ignoring: true,
-                            child: Text(
-                              "순서대로\n 터치해 주세요.",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 22,),
-                          startButton(() {
-                            setState(() {
-                              _isGameActive = true;
-                            });
-                          }),
-                        ],
+                    IgnorePointer(
+                      ignoring: true,
+                      child: Text(
+                        context.tr("Please_touch_in_order"),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: _buildButtonAdjuster(),
-                      ),
+                    const SizedBox(
+                      height: 22,
                     ),
+                    startButton(() {
+                      setState(() {
+                        _isGameActive = true;
+                      });
+                    }),
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 40, left: 8),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    iconSize: 36,
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                  ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: _buildButtonAdjuster(),
                 ),
               ),
             ],
-          );
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 40, left: 8),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              iconSize: 36,
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   bool _isWinner() {
@@ -120,7 +121,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   }
 
   void _touchScreen(PointerDownEvent event) {
-    if (_isGameOver  || !_isGameActive) return;
+    if (_isGameOver || !_isGameActive) return;
     setState(() {
       _activeTouches[event.pointer] = _getLocalPosition(event);
       if (_isWinner()) {
@@ -205,7 +206,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "당첨확룰",
+                        context.tr("Odds_of_winning"),
                         style: const TextStyle(
                           color: Color(0xFFcfcfcf),
                           fontSize: 13,

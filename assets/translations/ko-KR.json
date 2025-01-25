@@ -6,5 +6,7 @@
   "Sense_Game": "👀 눈치 게임",
   "Game_again": "다시하기",
   "Number_of_Loser": "당첨자 수",
-  "Touch_Roulette": "🧨 뽑기 게임"
+  "Touch_Roulette": "🧨 뽑기 게임",
+  "Please_touch_in_order" : "순서대로\n 터치 해주세요.",
+  "Odds_of_winning" : "당첨 확률"
 }
