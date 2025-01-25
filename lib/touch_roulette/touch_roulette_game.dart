@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../common/button/start_button.dart';
 import '../game_over.dart';
 import '../user_circle_painter.dart';
 
@@ -45,68 +46,73 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
               failingPointers: {},
             ),
           if (!_isGameActive)
-            Stack(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IgnorePointer(
-                              ignoring: true,
-                              child: Text(
-                                "순서대로\n 터치해 주세요.",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: _buildButtonAdjuster(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40, left: 8),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      iconSize: 36,
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            readyGame(context),
         ],
       ),
     );
+  }
+
+  Stack readyGame(BuildContext context) {
+    return Stack(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IgnorePointer(
+                            ignoring: true,
+                            child: Text(
+                              "순서대로\n 터치해 주세요.",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 22,),
+                          startButton(() {
+                            setState(() {
+                              _isGameActive = true;
+                            });
+                          }),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: _buildButtonAdjuster(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 40, left: 8),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    iconSize: 36,
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   bool _isWinner() {
@@ -114,9 +120,8 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   }
 
   void _touchScreen(PointerDownEvent event) {
-    if (_isGameOver) return;
+    if (_isGameOver  || !_isGameActive) return;
     setState(() {
-      _isGameActive = true;
       _activeTouches[event.pointer] = _getLocalPosition(event);
       if (_isWinner()) {
         _gameOver();
