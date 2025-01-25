@@ -143,6 +143,9 @@ class _GameScreenState extends State<GameScreen> {
       _releaseOffset[event.pointer] = _activeTouches[event.pointer]!;
       _activeTouches.remove(event.pointer);
     });
+    if (_activeTouches.isEmpty && !_isGameOver) {
+      _restartGame();
+    }
     _checkGameEnd();
   }
 
@@ -245,6 +248,8 @@ class _GameScreenState extends State<GameScreen> {
 
   void _restartGame() {
     setState(() {
+      _countdownTimer?.cancel();
+      _countdownTimer = null;
       _activeTouches.clear();
       _isCountingDown = false;
       _isGameActive = false;
