@@ -12,30 +12,67 @@ class AdManager {
   AdManagerBannerAd? homeBannerAd;
   AdManagerBannerAd? randomGameBannerAd;
   AdManagerBannerAd? guessingGameBannerAd;
+  AdManagerBannerAd? touchRouletteGameBannerAd;
 
   AdManager({
     this.homeBannerAd,
     this.randomGameBannerAd,
     this.guessingGameBannerAd,
+    this.touchRouletteGameBannerAd,
   });
 
   // AdManager 객체 초기화
   factory AdManager.init() => instance = AdManager(
-        homeBannerAd: _loadBannerAd(),
-        randomGameBannerAd: _loadBannerAd(),
-        guessingGameBannerAd: _loadBannerAd(),
+        homeBannerAd: _loadBannerAd(
+          homeBannerAdId,
+        ),
+        randomGameBannerAd: _loadBannerAd(
+          randomGameBannerAdId,
+        ),
+        guessingGameBannerAd: _loadBannerAd(
+          guessingGameBannerAdId,
+        ),
+        touchRouletteGameBannerAd: _loadBannerAd(
+          touchRouletteGameBannerAdId
+        ),
       );
 }
 
-AdManagerBannerAd _loadBannerAd() {
-  final adUnitId = kDebugMode
-      ? Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/9214589741'
-          : 'ca-app-pub-3940256099942544/2435281174'
-      : Platform.isAndroid
-          ? 'ca-app-pub-3749644430343897/1482926499'
-          : 'ca-app-pub-3749644430343897/2370462752';
+final homeBannerAdId = kDebugMode
+// 테스트 광고 ID
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+// 실제 광고 ID
+    : Platform.isAndroid
+        ? 'ca-app-pub-3749644430343897/1482926499'
+        : 'ca-app-pub-3749644430343897/2370462752';
 
+final randomGameBannerAdId = kDebugMode
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+    : Platform.isAndroid
+        ? 'ca-app-pub-3749644430343897/4890315318'
+        : 'ca-app-pub-3749644430343897/8850280626';
+
+final guessingGameBannerAdId = kDebugMode
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+    : Platform.isAndroid
+        ? 'ca-app-pub-3749644430343897/3952638161'
+        : 'ca-app-pub-3749644430343897/7537198955';
+
+final touchRouletteGameBannerAdId = kDebugMode
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+    : Platform.isAndroid
+        ? 'cca-app-pub-3749644430343897/1031500354'
+        : 'ca-app-pub-3749644430343897/2132296207';
+
+AdManagerBannerAd _loadBannerAd(String adUnitId) {
   return AdManagerBannerAd(
     adUnitId: adUnitId,
     request: const AdManagerAdRequest(),

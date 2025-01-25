@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../admob/banner_adb.dart';
 import '../game_over.dart';
 import '../user_circle_painter.dart';
 
@@ -45,89 +47,110 @@ class _RandomGameScreenState extends State<RandomGameScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: Stack(
+      body: Column(
         children: [
-          if (_painterVisible)
-            Listener(
-              onPointerDown: _handlePointerDown,
-              onPointerMove: _handlePointerMove,
-              onPointerUp: _handlePointerUp,
-              child: CustomPaint(
-                painter: UserCirclePainter(_activeTouches),
-                child: Container(), // Covers the entire screen
-              ),
-            ),
-          if (_isGameOver)
-            GameOverWidget(
-              title: "당첨!",
-              onRestart: _restartGame,
-              failingPointers: _failingPointer ?? {},
-            ),
-          if (_isCountingDown)
-            IgnorePointer(
-              ignoring: true,
-              child: Center(
-                child: Text(
-                  '$_countdown',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          if (!_isCountingDown && !_isGameActive && !_isGameOver)
-            Stack(
+          Expanded(
+            child: Stack(
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: Stack(
+                if (_painterVisible)
+                  Listener(
+                    onPointerDown: _handlePointerDown,
+                    onPointerMove: _handlePointerMove,
+                    onPointerUp: _handlePointerUp,
+                    child: CustomPaint(
+                      painter: UserCirclePainter(_activeTouches),
+                      child: Container(), // Covers the entire screen
+                    ),
+                  ),
+                if (_isGameOver)
+                  GameOverWidget(
+                    title: "당첨!",
+                    onRestart: _restartGame,
+                    failingPointers: _failingPointer ?? {},
+                  ),
+                if (_isCountingDown)
+                  IgnorePointer(
+                    ignoring: true,
+                    child: Center(
+                      child: Text(
+                        '$_countdown',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 80,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (!_isCountingDown && !_isGameActive && !_isGameOver)
+                  Stack(
                     children: [
-                      Align(
+                      Container(
                         alignment: Alignment.center,
-                        child: IgnorePointer(
-                          ignoring: true,
-                          child: Text(
-                            context.tr(
-                                "Please_touch_2_or_more_people_at_the_same_time."),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: IgnorePointer(
+                                ignoring: true,
+                                child: Text(
+                                  context.tr(
+                                      "Please_touch_2_or_more_people_at_the_same_time."),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: _buildFailingCountAdjuster(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 40, left: 8),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            iconSize: 36,
+                            icon: const Icon(
+                              Icons.arrow_back,
                               color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: _buildFailingCountAdjuster(),
-                        ),
-                      ),
                     ],
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40, left: 8),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      iconSize: 36,
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
+          ),
+          AdManager.instance.randomGameBannerAd == null
+              ? Container()
+              : SizedBox(
+            width: AdManager
+                .instance.randomGameBannerAd!.sizes.first.width
+                .toDouble(),
+            height: AdManager
+                .instance.randomGameBannerAd!.sizes.first.height
+                .toDouble(),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AdWidget(
+                  ad: AdManager.instance.randomGameBannerAd!),
+            ),
+          ),
         ],
       ),
     );

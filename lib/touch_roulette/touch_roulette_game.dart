@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../admob/banner_adb.dart';
 import '../common/button/start_button.dart';
 import '../game_over.dart';
 import '../user_circle_painter.dart';
@@ -30,22 +32,43 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: baseBackgroundColor,
-      body: Stack(
+      body: Column(
         children: [
-          Listener(
-            onPointerDown: _touchScreen, // Tr Reset on cancel
-            child: CustomPaint(
-              painter: UserCirclePainter(_activeTouches),
-              child: Container(), // Covers the entire screen
+          Expanded(
+            child: Stack(
+              children: [
+                Listener(
+                  onPointerDown: _touchScreen, // Tr Reset on cancel
+                  child: CustomPaint(
+                    painter: UserCirclePainter(_activeTouches),
+                    child: Container(), // Covers the entire screen
+                  ),
+                ),
+                if (_isGameOver)
+                  GameOverWidget(
+                    title: context.tr("Loser"),
+                    onRestart: _restartGame,
+                    failingPointers: {},
+                  ),
+                if (!_isGameActive) readyGame(context),
+              ],
             ),
           ),
-          if (_isGameOver)
-            GameOverWidget(
-              title: context.tr("Loser"),
-              onRestart: _restartGame,
-              failingPointers: {},
-            ),
-          if (!_isGameActive) readyGame(context),
+          AdManager.instance.touchRouletteGameBannerAd == null
+              ? Container()
+              : SizedBox(
+                  width: AdManager
+                      .instance.touchRouletteGameBannerAd!.sizes.first.width
+                      .toDouble(),
+                  height: AdManager
+                      .instance.touchRouletteGameBannerAd!.sizes.first.height
+                      .toDouble(),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AdWidget(
+                        ad: AdManager.instance.touchRouletteGameBannerAd!),
+                  ),
+                ),
         ],
       ),
     );
