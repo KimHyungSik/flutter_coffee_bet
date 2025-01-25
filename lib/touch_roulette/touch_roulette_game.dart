@@ -56,25 +56,55 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
               failingPointers: {},
             ),
           if (!_isGameActive)
-            Center(
-              child: _buildButtonAdjuster(),
-            ),
-          Container(
-            margin: const EdgeInsets.only(top: 40, left: 8),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                iconSize: 36,
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+            Stack(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: Text(
+                            "순서대로\n 터치해 주세요.",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: _buildButtonAdjuster(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Container(
+                  margin: const EdgeInsets.only(top: 40, left: 8),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      iconSize: 36,
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
         ],
       ),
     );
@@ -143,7 +173,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
 
   Widget _buildButtonAdjuster() {
     return Align(
-      alignment: Alignment.center,
+      alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
@@ -168,16 +198,36 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
               width: 8,
             ),
             Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  '$_winnerChance%',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFFcfcfcf),
-                    fontSize: 45,
-                    fontWeight: FontWeight.normal,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Color(0xFF121212),
+                ),
+                height: 88,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "당첨확룰",
+                        style: const TextStyle(
+                          color: Color(0xFFcfcfcf),
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        '$_winnerChance%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
