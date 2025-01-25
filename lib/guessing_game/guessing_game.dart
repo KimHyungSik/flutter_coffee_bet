@@ -166,7 +166,7 @@ class _GameScreenState extends State<GameScreen> {
       _releaseOffset[event.pointer] = _activeTouches[event.pointer]!;
       _activeTouches.remove(event.pointer);
     });
-    if (_activeTouches.isEmpty && !_isGameOver) {
+    if (_activeTouches.isEmpty && !_isGameOver && !_isGameActive) {
       _restartGame();
     }
     _checkGameEnd();
