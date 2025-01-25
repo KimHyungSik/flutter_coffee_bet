@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../game_over.dart';
+import '../user_circle_painter.dart';
 
 class TouchRouletteGame extends StatefulWidget {
   const TouchRouletteGame({super.key});
@@ -14,14 +15,6 @@ class TouchRouletteGame extends StatefulWidget {
 }
 
 class _TouchRouletteGameState extends State<TouchRouletteGame> {
-  static const List<Color> backGroundColorList = [
-    Color(0xFFFFC1CC), // Pastel Pink
-    Color(0xFFB2F5EA), // Pastel Mint
-    Color(0xFFCCE5FF), // Pastel Blue
-    Color(0xFFFFF2B2), // Pastel Yellow
-    Color(0xFFE1C4FC), // Pastel Purple
-  ];
-
   static Color? baseBackgroundColor = Colors.grey[900];
 
   bool _isGameActive = false;
@@ -29,7 +22,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   Color? _backgroundColor = baseBackgroundColor;
 
   int _winnerChance = 30; // Initial chance of winning 30%
-
+  final Map<int, Offset> _activeTouches = {};
   final Random _random = Random();
 
   @override
@@ -38,15 +31,11 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
       backgroundColor: baseBackgroundColor,
       body: Stack(
         children: [
-          GestureDetector(
-            onTapDown: (_) => _changeColor(true), // Trigger on press
-            onTapUp: (_) => _changeColor(false), // Reset on release
-            onTapCancel: () => _changeColor(false), // Reset on cancel
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300), // Animation duration
-              curve: Curves.easeInOut, // Smooth animation
-              color: _backgroundColor,
-              child: Container(),
+          Listener(
+            onPointerDown: _touchScreen, // Tr Reset on cancel
+            child: CustomPaint(
+              painter: UserCirclePainter(_activeTouches),
+              child: Container(), // Covers the entire screen
             ),
           ),
           if (_isGameOver)
@@ -64,17 +53,27 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: IgnorePointer(
-                          ignoring: true,
-                          child: Text(
-                            "순서대로\n 터치해 주세요.",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IgnorePointer(
+                              ignoring: true,
+                              child: Text(
+                                "순서대로\n 터치해 주세요.",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.white,
+                            )
+                          ],
                         ),
                       ),
                       Align(
@@ -110,31 +109,24 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
     );
   }
 
-  // Get a random pastel color from the list
-  Color _getRandomColor() {
-    return backGroundColorList[_random.nextInt(backGroundColorList.length)];
-  }
-
-  // Determine if the user wins based on the current chance
   bool _isWinner() {
     return _random.nextInt(100) < _winnerChance; // Variable chance
   }
 
-  void _changeColor(bool isPressed) {
+  void _touchScreen(PointerDownEvent event) {
     if (_isGameOver) return;
     setState(() {
       _isGameActive = true;
-      if (isPressed) {
-        if (_isWinner()) {
-          _backgroundColor = _getRandomColor();
-          _gameOver();
-        } else {
-          _backgroundColor = _getRandomColor();
-        }
-      } else {
-        _backgroundColor = baseBackgroundColor;
+      _activeTouches[event.pointer] = _getLocalPosition(event);
+      if (_isWinner()) {
+        _gameOver();
       }
     });
+  }
+
+  Offset _getLocalPosition(PointerEvent event) {
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    return box.globalToLocal(event.position);
   }
 
   void _gameOver() {
@@ -162,12 +154,9 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
   void _restartGame() {
     setState(() {
       _backgroundColor = baseBackgroundColor;
-    });
-    Timer(const Duration(milliseconds: 300), () {
-      setState(() {
-        _isGameActive = false;
-        _isGameOver = false;
-      });
+      _isGameActive = false;
+      _isGameOver = false;
+      _activeTouches.clear();
     });
   }
 

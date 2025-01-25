@@ -58,7 +58,7 @@ class GameOverWidget extends StatelessWidget {
                     shadowColor: Colors.black54,
                   ),
                   child: const Text(
-                    '다시 하기',
+                    '',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
