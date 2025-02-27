@@ -1,5 +1,6 @@
 import 'package:coffee_bet/guessing_game/guessing_game.dart';
 import 'package:coffee_bet/ramdom_game/random_game.dart';
+import 'package:coffee_bet/russian_roulette_gam/russian_roulettte_game.dart';
 import 'package:coffee_bet/touch_roulette/touch_roulette_game.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,17 @@ class HomeScreen extends StatelessWidget {
                           );
                         },
                         title: context.tr("Touch_Roulette"),
+                      ),
+                      _homeButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RussianRouletteGame(),
+                            ),
+                          );
+                        },
+                        title: "러시안 룰렛",
                       ),
                     ]),
               ),
