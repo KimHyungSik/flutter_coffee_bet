@@ -32,7 +32,6 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
 
   bool _isGameActive = false;
   bool _isGameOver = false;
-  bool _isWinRound = false;
   Color? _backgroundColor = baseBackgroundColor;
 
   // 총의 실린더를 나타내는 변수들
@@ -40,6 +39,7 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
   int _bulletPosition = 0; // 총알이 있는 위치
   int _currentPosition = 0; // 현재 발사 위치
   int _roundsWon = 0; // 승리한 라운드 수
+  bool _canFire = true; // 총을 쏠 수 있는지 여부
   final List<int> _usedChambers = []; // 사용된 챔버 목록
 
   final Random _random = Random();
@@ -68,11 +68,9 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
                 if (_isGameActive && !_isGameOver) _buildGameScreen(),
                 if (_isGameOver)
                   GameOverWidget(
-                    title: _isWinRound
-                        ? context.tr("Winner")
-                        : context.tr("Loser"),
+                    title: context.tr("Loser"),
                     onRestart: _restartGame,
-                    failingPointers: {},
+                    failingPointers: const {},
                   ),
                 if (!_isGameActive) _readyGame(context),
               ],
@@ -120,7 +118,7 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
           const SizedBox(width: 40),
           _buildActionButton(
             Icons.flash_on,
-            Colors.red,
+            _canFire ? Colors.red : Colors.grey,
             _fireChamber,
           ),
         ],
@@ -138,8 +136,7 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
           currentPosition: _currentPosition,
           chamberColors: chamberColors,
           usedChambers: _usedChambers,
-          nextPosition:
-              _isGameOver ? null : (_currentPosition + 1) % _chamberCount,
+          canFire: _canFire,
         ),
         size: const Size(300, 300),
       ),
@@ -162,23 +159,21 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
     );
   }
 
-  void _spinChamber() {
-    if (_isGameOver) return;
-
-    setState(() {
-      // 실린더를 랜덤하게 돌림
-      _currentPosition = _random.nextInt(_chamberCount);
-    });
-  }
-
   void _fireChamber() {
     if (_isGameOver) return;
+    _canFire = false;
+    Timer(const Duration(milliseconds: 1000), () {
+      setState(() {
+        _canFire = true;
+      });
+    });
 
     setState(() {
       if (_currentPosition == _bulletPosition) {
         // 총알에 맞음 - 게임 오버
-        _isWinRound = false;
-        _gameOver();
+        Timer(const Duration(milliseconds: 800), () {
+          _gameOver();
+        });
       } else {
         // 생존 - 다음 칸으로 이동
         _usedChambers.add(_currentPosition);
@@ -187,8 +182,9 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
 
         // 모든 칸을 돌았다면 승리
         if (_roundsWon >= _chamberCount - 1) {
-          _isWinRound = true;
-          _gameOver();
+          Timer(const Duration(milliseconds: 800), () {
+            _gameOver();
+          });
         }
       }
     });
@@ -366,6 +362,7 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
       _isGameActive = false;
       _isGameOver = false;
       _roundsWon = 0;
+      _usedChambers.clear();
       _resetChambers();
     });
   }
@@ -375,16 +372,17 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
 class RevolverPainter extends CustomPainter {
   final int chamberCount;
   final int currentPosition;
-  final int? nextPosition;
   final List<Color> chamberColors;
   final List<int> usedChambers;
+  final bool canFire;
 
-  RevolverPainter(
-      {required this.chamberCount,
-      required this.currentPosition,
-      required this.chamberColors,
-      required this.usedChambers,
-      required this.nextPosition});
+  RevolverPainter({
+    required this.chamberCount,
+    required this.currentPosition,
+    required this.chamberColors,
+    required this.usedChambers,
+    required this.canFire,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -402,6 +400,8 @@ class RevolverPainter extends CustomPainter {
     final chamberRadius = radius * 0.18; // 챔버 크기 살짝 줄이기
     final chamberDistance = radius * 0.65; // 챔버들이 더 중앙으로 이동
 
+    final randomIndex = Random().nextInt(chamberColors.length);
+
     for (int i = 0; i < chamberCount; i++) {
       final angle = 2 * pi * i / chamberCount - pi / 2;
       final chamberCenter = Offset(
@@ -411,17 +411,15 @@ class RevolverPainter extends CustomPainter {
 
       final circlePaint = Paint()
         ..style = PaintingStyle.fill
-        ..color = i == currentPosition || usedChambers.contains(i)
-            ? chamberColors[i % chamberColors.length]
+        ..color = usedChambers.contains(i)
+            ? chamberColors[(i + randomIndex) % chamberColors.length]
             : Colors.white;
 
       final strokePaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
-        ..color = i == currentPosition ||
-                usedChambers.contains(i) ||
-                i == nextPosition
-            ? chamberColors[i % chamberColors.length]
+        ..color = (i == currentPosition && canFire) || usedChambers.contains(i)
+            ? chamberColors[(i + randomIndex) % chamberColors.length]
             : Colors.white;
 
       // 챔버 크기 조정하여 더 중앙으로 배치
