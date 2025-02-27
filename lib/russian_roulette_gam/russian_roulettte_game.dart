@@ -78,19 +78,19 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
               ],
             ),
           ),
-          AdManager.instance.touchRouletteGameBannerAd == null
+          AdManager.instance.russianRouletteGameBannerAd == null
               ? Container()
               : SizedBox(
                   width: AdManager
-                      .instance.touchRouletteGameBannerAd!.sizes.first.width
+                      .instance.russianRouletteGameBannerAd!.sizes.first.width
                       .toDouble(),
                   height: AdManager
-                      .instance.touchRouletteGameBannerAd!.sizes.first.height
+                      .instance.russianRouletteGameBannerAd!.sizes.first.height
                       .toDouble(),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: AdWidget(
-                        ad: AdManager.instance.touchRouletteGameBannerAd!),
+                        ad: AdManager.instance.russianRouletteGameBannerAd!),
                   ),
                 ),
         ],

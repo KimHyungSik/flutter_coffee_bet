@@ -13,12 +13,14 @@ class AdManager {
   AdManagerBannerAd? randomGameBannerAd;
   AdManagerBannerAd? guessingGameBannerAd;
   AdManagerBannerAd? touchRouletteGameBannerAd;
+  AdManagerBannerAd? russianRouletteGameBannerAd;
 
   AdManager({
     this.homeBannerAd,
     this.randomGameBannerAd,
     this.guessingGameBannerAd,
     this.touchRouletteGameBannerAd,
+    this.russianRouletteGameBannerAd,
   });
 
   // AdManager 객체 초기화
@@ -34,6 +36,9 @@ class AdManager {
         ),
         touchRouletteGameBannerAd: _loadBannerAd(
           touchRouletteGameBannerAdId
+        ),
+        russianRouletteGameBannerAd: _loadBannerAd(
+          russianRouletteGameBannerAdId
         ),
       );
 }
@@ -71,6 +76,14 @@ final touchRouletteGameBannerAdId = kDebugMode
     : Platform.isAndroid
         ? 'ca-app-pub-3749644430343897/1031500354'
         : 'ca-app-pub-3749644430343897/2132296207';
+
+final russianRouletteGameBannerAdId = kDebugMode
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+    : Platform.isAndroid
+        ? 'ca-app-pub-3749644430343897/6510779477'
+        : 'ca-app-pub-3749644430343897/9105153225';
 
 AdManagerBannerAd _loadBannerAd(String adUnitId) {
   return AdManagerBannerAd(
