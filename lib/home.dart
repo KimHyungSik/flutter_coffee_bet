@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        title: "러시안 룰렛",
+                        title: context.tr("Russian_Roulette"),
                       ),
                     ]),
               ),

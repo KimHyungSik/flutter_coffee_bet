@@ -7,6 +7,9 @@
   "Game_again": "Erneut Spielen",
   "Number_of_Loser": "Anzahl der Gewinner",
   "Touch_Roulette": "🧨 Spiel auswählen",
-  "Please_touch_in_order" : "Bitte berühren, um",
-  "Odds_of_winning" : "Gewinnchancen"
+  "Please_touch_in_order": "Bitte berühren, um",
+  "Odds_of_winning": "Gewinnchancen",
+  "Russian_Roulette": "🔫 Russisches Roulette",
+  "Spin_the_chamber_and_test_your_luck": "Drehen Sie die Kammer und testen Sie Ihr Glück",
+  "Chamber_count": "Kammeranzahl"
 }

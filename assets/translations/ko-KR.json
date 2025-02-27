@@ -8,5 +8,8 @@
   "Number_of_Loser": "당첨자 수",
   "Touch_Roulette": "🧨 뽑기 게임",
   "Please_touch_in_order" : "순서대로\n 터치 해주세요.",
-  "Odds_of_winning" : "당첨 확률"
+  "Odds_of_winning" : "당첨 확률",
+  "Russian_Roulette": "🔫 러시안 룰렛",
+  "Spin_the_chamber_and_test_your_luck": "총실을 돌려\n운을 시험하세요.",
+  "Chamber_count": "총실 수"
 }

@@ -7,6 +7,9 @@
   "Game_again": "Play Again",
   "Number_of_Loser": "Number of Loser",
   "Touch_Roulette": "🧨 Picker game",
-  "Please_touch_in_order" : "Please touch in order",
-  "Odds_of_winning" : "Odds of losing"
+  "Please_touch_in_order": "Please touch in order",
+  "Odds_of_winning": "Odds of losing",
+  "Russian_Roulette": "🔫 Russian Roulette",
+  "Spin_the_chamber_and_test_your_luck": "Spin the chamber and test your luck",
+  "Chamber_count": "Chamber count"
 }

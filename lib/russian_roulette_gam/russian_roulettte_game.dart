@@ -207,21 +207,12 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      context.tr("Russian_Roulette"),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
                       context.tr("Spin_the_chamber_and_test_your_luck"),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 20,
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 40),
