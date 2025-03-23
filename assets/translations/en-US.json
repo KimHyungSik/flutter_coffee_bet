@@ -21,5 +21,14 @@
   "Winner": "Winner",
   "Winners": "Winners",
   "Start_New_Drawing": "Start New Drawing",
-  "Participants": "Participants"
+  "Participants": "Participants",
+
+  "Reset": "Reset",
+  "Save_list": "Save list",
+  "Load_list": "Load list",
+  "Save": "Save",
+  "Saved_lists": "Saved lists",
+  "No_saved_lists": "No saved lists",
+  "Save_participant_list": "Save participant list",
+  "Enter_list_name": "Enter list name"
 }

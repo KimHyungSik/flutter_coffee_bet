@@ -21,5 +21,14 @@
   "Winner": "当選者",
   "Winners": "当選者たち",
   "Start_New_Drawing": "新しい抽選を始める",
-  "Participants": "参加者"
+  "Participants": "参加者",
+
+  "Reset": "リセット",
+  "Save_list": "リストを保存",
+  "Load_list": "リストを読み込む",
+  "Save": "保存",
+  "Saved_lists": "保存されたリスト",
+  "No_saved_lists": "保存されたリストがありません",
+  "Save_participant_list": "参加者リストを保存",
+  "Enter_list_name": "リスト名を入力"
 }

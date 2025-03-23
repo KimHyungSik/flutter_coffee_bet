@@ -5,7 +5,7 @@
   "Random_Game": "🎲 Trò Chơi Ngẫu Nhiên",
   "Sense_Game": "👀 Trò Chơi Cảm Giác",
   "Game_again": "Chơi Lại",
-  "Number_of_Loser": "จำนวนผู้ได้รับรางวัล",
+  "Number_of_Loser": "Số người trúng thưởng",
   "Touch_Roulette": "🧨 Chọn trò chơi",
   "Please_touch_in_order": "Vui lòng chạm theo thứ tự",
   "Odds_of_winning": "Xác suất thắng",
@@ -21,5 +21,14 @@
   "Winner": "Người Thắng",
   "Winners": "Những Người Thắng",
   "Start_New_Drawing": "Bắt Đầu Bốc Thăm Mới",
-  "Participants": "Người Tham Gia"
+  "Participants": "Người Tham Gia",
+
+  "Reset": "Đặt Lại",
+  "Save_list": "Lưu Danh Sách",
+  "Load_list": "Tải Danh Sách",
+  "Save": "Lưu",
+  "Saved_lists": "Danh Sách Đã Lưu",
+  "No_saved_lists": "Không có danh sách nào được lưu",
+  "Save_participant_list": "Lưu danh sách người tham gia",
+  "Enter_list_name": "Nhập tên danh sách"
 }

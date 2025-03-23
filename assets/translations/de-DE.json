@@ -21,5 +21,14 @@
   "Winner": "Gewinner",
   "Winners": "Gewinner",
   "Start_New_Drawing": "Neue Ziehung starten",
-  "Participants": "Teilnehmer"
+  "Participants": "Teilnehmer",
+
+  "Reset": "Zurücksetzen",
+  "Save_list": "Liste speichern",
+  "Load_list": "Liste laden",
+  "Save": "Speichern",
+  "Saved_lists": "Gespeicherte Listen",
+  "No_saved_lists": "Keine gespeicherten Listen",
+  "Save_participant_list": "Teilnehmerliste speichern",
+  "Enter_list_name": "Listennamen eingeben"
 }

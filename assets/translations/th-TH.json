@@ -21,5 +21,14 @@
   "Winner": "ผู้ชนะ",
   "Winners": "ผู้ชนะหลายคน",
   "Start_New_Drawing": "เริ่มการจับฉลากใหม่",
-  "Participants": "ผู้เข้าร่วม"
+  "Participants": "ผู้เข้าร่วม",
+
+  "Reset": "รีเซ็ต",
+  "Save_list": "บันทึกรายชื่อ",
+  "Load_list": "โหลดรายชื่อ",
+  "Save": "บันทึก",
+  "Saved_lists": "รายชื่อที่บันทึกไว้",
+  "No_saved_lists": "ไม่มีรายชื่อที่บันทึกไว้",
+  "Save_participant_list": "บันทึกรายชื่อผู้เข้าร่วม",
+  "Enter_list_name": "ใส่ชื่อรายการ"
 }

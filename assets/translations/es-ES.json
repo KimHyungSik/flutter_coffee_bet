@@ -21,5 +21,14 @@
   "Winner": "Ganador",
   "Winners": "Ganadores",
   "Start_New_Drawing": "Iniciar Nuevo Sorteo",
-  "Participants": "Participantes"
+  "Participants": "Participantes",
+
+  "Reset": "Reiniciar",
+  "Save_list": "Guardar lista",
+  "Load_list": "Cargar lista",
+  "Save": "Guardar",
+  "Saved_lists": "Listas guardadas",
+  "No_saved_lists": "No hay listas guardadas",
+  "Save_participant_list": "Guardar lista de participantes",
+  "Enter_list_name": "Introduce nombre de la lista"
 }

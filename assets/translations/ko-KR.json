@@ -21,5 +21,14 @@
   "Winner": "당첨자",
   "Winners": "당첨자들",
   "Start_New_Drawing": "새로운 제비뽑기",
-  "Participants": "참가자"
+  "Participants": "참가자",
+
+  "Reset": "초기화",
+  "Save_list": "목록 저장",
+  "Load_list": "목록 불러오기",
+  "Save": "저장",
+  "Saved_lists": "저장된 목록",
+  "No_saved_lists": "저장된 목록이 없습니다",
+  "Save_participant_list": "참가자 목록 저장",
+  "Enter_list_name": "목록 이름 입력"
 }

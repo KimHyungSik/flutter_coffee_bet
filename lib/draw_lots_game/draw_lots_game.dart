@@ -4,7 +4,8 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../game_over.dart';
+import '../game_over.dart';
+import '../utils/shared_preferences_manager.dart';
 
 class DrawingLotsGameApp extends StatelessWidget {
   const DrawingLotsGameApp({super.key});
@@ -70,27 +71,50 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
       body: SafeArea(
         child: Column(
           children: [
-            // Back button and title area
+            // Header area with back button and reset button
             Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                    size: 32,
+              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 32,
+                    ),
                   ),
-                ),
+                  Spacer(),
+                  if (!_hasDrawn)
+                    IconButton(
+                      onPressed: _showSaveParticipantsBottomSheet,
+                      icon: const Icon(
+                        Icons.save,
+                        color: Colors.white,
+                      ),
+                      tooltip: context.tr("Save_list"),
+                    ),
+                  if (!_hasDrawn)
+                    IconButton(
+                      onPressed: _resetGame,
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      tooltip: context.tr("Reset"),
+                    ),
+                ],
               ),
             ),
 
             // Main content area
             Expanded(
-              child: _hasDrawn ? _buildWinnerDisplay() : _buildDrawingLotsScreen(),
+              child:
+                  _hasDrawn ? _buildWinnerDisplay() : _buildDrawingLotsScreen(),
             ),
 
             // Bottom button area - this will hold either the Draw Winner or Start New Drawing button
@@ -100,42 +124,73 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
                 width: double.infinity,
                 child: _hasDrawn
                     ? ElevatedButton(
-                  onPressed: _restartGame,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF5252),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: Text(
-                    context.tr("Start_New_Drawing"),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-                    : ElevatedButton(
-                  onPressed: _participants.isEmpty ? null : _startDrawing,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF5252),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    disabledBackgroundColor: Colors.grey,
-                  ),
-                  child: Text(
-                    context.tr("Draw_Winner"),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                        onPressed: _restartGame,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF5252),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text(
+                          context.tr("Start_New_Drawing"),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: ElevatedButton(
+                              onPressed:
+                                  _participants.isEmpty ? null : _startDrawing,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFF5252),
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                disabledBackgroundColor: Colors.grey,
+                              ),
+                              child: Text(
+                                context.tr("Draw_Winner"),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              onPressed: _showLoadParticipantsBottomSheet,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.blue,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                disabledBackgroundColor: Colors.grey,
+                              ),
+                              icon: const Icon(
+                                Icons.file_upload_outlined,
+                                color: Colors.white,
+                              ),
+                              tooltip: context.tr("Load_list"),
+                            ),
+                          ),
+                        ],
+                      ),
               ),
             ),
           ],
@@ -178,12 +233,14 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
                   child: TextField(
                     controller: _nameController,
                     style: const TextStyle(color: Colors.white),
-                    maxLength: 10, // Limit input to 10 characters
+                    maxLength: 10,
+                    // Limit input to 10 characters
                     decoration: InputDecoration(
                       hintText: context.tr("Enter_name"),
                       hintStyle: TextStyle(color: Colors.grey[500]),
                       border: InputBorder.none,
-                      counterText: "", // Hide the character counter
+                      counterText: "",
+                      // Hide the character counter
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 16),
                     ),
@@ -221,35 +278,39 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
             child: _participants.isEmpty
                 ? const SizedBox.shrink()
                 : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "${context.tr("Participants")} (${_participants.length})",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${context.tr("Participants")} (${_participants.length})",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Wrap(
+                            spacing: 10, // gap between adjacent chips
+                            runSpacing: 10, // gap between lines
+                            children:
+                                _participants.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              String name = entry.value;
+                              return _buildParticipantsItem(index, name);
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Wrap(
-                      spacing: 10, // gap between adjacent chips
-                      runSpacing: 10, // gap between lines
-                      children: _participants.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        String name = entry.value;
-                        return _buildParticipantsItem(index, name);
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ],
@@ -291,19 +352,35 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
     );
   }
 
+  Widget _buildParticipantTag(String name) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.only(right: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey[700],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        name,
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+      ),
+    );
+  }
+
   Widget _buildWinnerDisplay() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          _winners.length > 1 ? context.tr("Winners") : context.tr("Winner"),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         const SizedBox(height: 24),
+        if (!_isDrawing)
+          Text(
+            _winners.length > 1 ? context.tr("Winners") : context.tr("Winner"),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         if (_isDrawing)
           AnimatedBuilder(
             animation: _animation,
@@ -327,23 +404,23 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: _winners
                   .map((winner) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  winner,
-                  style: const TextStyle(
-                    color: Colors.yellow,
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2, 2),
-                        blurRadius: 10,
-                        color: Colors.black54,
-                      ),
-                    ],
-                  ),
-                ),
-              ))
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          winner,
+                          style: const TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2, 2),
+                                blurRadius: 10,
+                                color: Colors.black54,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ))
                   .toList(),
             ),
           ),
@@ -375,8 +452,18 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
     setState(() {
       _participants.removeAt(index);
       if (_numWinners > _participants.length) {
-        _numWinners = _participants.length > 0 ? _participants.length : 1;
+        _numWinners = _participants.isNotEmpty ? _participants.length : 1;
       }
+    });
+  }
+
+  void _resetGame() {
+    setState(() {
+      _participants.clear();
+      _nameController.clear();
+      _winners.clear();
+      _hasDrawn = false;
+      _isDrawing = false;
     });
   }
 
@@ -442,6 +529,201 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
       _hasDrawn = false;
       _isDrawing = false;
       _winners.clear();
+    });
+  }
+
+  // Save participants list bottom sheet
+  void _showSaveParticipantsBottomSheet() {
+    final TextEditingController nameController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                context.tr("Save_participant_list"),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: nameController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: context.tr("Enter_list_name"),
+                  hintStyle: TextStyle(color: Colors.grey[500]),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (nameController.text.trim().isNotEmpty) {
+                      await SharedPreferencesManager.saveParticipantsList(
+                          nameController.text.trim(), _participants);
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    context.tr("Save"),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Load participants list bottom sheet
+  void _showLoadParticipantsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return FutureBuilder<Map<String, List<String>>>(
+              future: SharedPreferencesManager.getParticipantsLists(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        context.tr("No_saved_lists"),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  );
+                }
+
+                final lists = snapshot.data!;
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        context.tr("Saved_lists"),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: lists.length,
+                        itemBuilder: (context, index) {
+                          final name = lists.keys.elementAt(index);
+                          final participants = lists[name]!;
+
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context, participants);
+                            },
+                            child: ListTile(
+                              title: Text(
+                                name,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Container(
+                                height: 30,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: participants
+                                        .map((name) =>
+                                            _buildParticipantTag(name))
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.cancel,
+                                        color: Colors.grey),
+                                    iconSize: 20,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    onPressed: () async {
+                                      await SharedPreferencesManager
+                                          .deleteParticipantsList(name);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
+    ).then((selectedParticipants) {
+      if (selectedParticipants != null) {
+        setState(() {
+          _participants.clear();
+          _participants.addAll(selectedParticipants as List<String>);
+        });
+      }
     });
   }
 }
