@@ -8,7 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'admob/banner_adb.dart';
 import 'admob/full_width_banner.dart';
-import 'draw_lots_game.dart';
+import 'draw_lots_game/draw_lots_game.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

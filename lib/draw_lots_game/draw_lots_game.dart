@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../game_over.dart';
+import '../../game_over.dart';
 
 class DrawingLotsGameApp extends StatelessWidget {
   const DrawingLotsGameApp({super.key});
