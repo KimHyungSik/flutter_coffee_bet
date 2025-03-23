@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../admob/banner_adb.dart';
 import '../game_over.dart';
 import '../utils/shared_preferences_manager.dart';
 
@@ -68,133 +70,157 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header area with back button and reset button
-            Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: [
+          // Header area with back button and reset button
+          Expanded(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 40, left: 8),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      if (!_hasDrawn)
+                        IconButton(
+                          onPressed: _showSaveParticipantsBottomSheet,
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
+                          tooltip: context.tr("Save_list"),
+                        ),
+                      if (!_hasDrawn)
+                        IconButton(
+                          onPressed: _resetGame,
+                          icon: const Icon(
+                            Icons.refresh,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          tooltip: context.tr("Reset"),
+                        ),
+                    ],
+                  ),
+                ),
+
+                // Main content area
+                Expanded(
+                  child: _hasDrawn
+                      ? _buildWinnerDisplay()
+                      : _buildDrawingLotsScreen(),
+                ),
+
+                // Bottom button area - this will hold either the Draw Winner or Start New Drawing button
+                bottomButton(context),
+              ],
+            ),
+          ),
+          AdManager.instance.drawLotsGameBannerAd == null
+              ? Container()
+              : SizedBox(
+                  width: AdManager
+                      .instance.drawLotsGameBannerAd!.sizes.first.width
+                      .toDouble(),
+                  height: AdManager
+                      .instance.drawLotsGameBannerAd!.sizes.first.height
+                      .toDouble(),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child:
+                        AdWidget(ad: AdManager.instance.drawLotsGameBannerAd!),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Padding bottomButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: _hasDrawn
+            ? ElevatedButton(
+                onPressed: _restartGame,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF5252),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  context.tr("Start_New_Drawing"),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 32,
+                  Expanded(
+                    flex: 4,
+                    child: ElevatedButton(
+                      onPressed: _participants.isEmpty ? null : _startDrawing,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF5252),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        disabledBackgroundColor: Colors.grey,
+                      ),
+                      child: Text(
+                        context.tr("Draw_Winner"),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                  Spacer(),
-                  if (!_hasDrawn)
-                    IconButton(
-                      onPressed: _showSaveParticipantsBottomSheet,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: _showLoadParticipantsBottomSheet,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        disabledBackgroundColor: Colors.grey,
+                      ),
                       icon: const Icon(
-                        Icons.save,
+                        Icons.file_upload_outlined,
                         color: Colors.white,
                       ),
-                      tooltip: context.tr("Save_list"),
+                      tooltip: context.tr("Load_list"),
                     ),
-                  if (!_hasDrawn)
-                    IconButton(
-                      onPressed: _resetGame,
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      tooltip: context.tr("Reset"),
-                    ),
+                  ),
                 ],
               ),
-            ),
-
-            // Main content area
-            Expanded(
-              child:
-                  _hasDrawn ? _buildWinnerDisplay() : _buildDrawingLotsScreen(),
-            ),
-
-            // Bottom button area - this will hold either the Draw Winner or Start New Drawing button
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: _hasDrawn
-                    ? ElevatedButton(
-                        onPressed: _restartGame,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF5252),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: Text(
-                          context.tr("Start_New_Drawing"),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: ElevatedButton(
-                              onPressed:
-                                  _participants.isEmpty ? null : _startDrawing,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFFF5252),
-                                foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                disabledBackgroundColor: Colors.grey,
-                              ),
-                              child: Text(
-                                context.tr("Draw_Winner"),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            flex: 1,
-                            child: IconButton(
-                              onPressed: _showLoadParticipantsBottomSheet,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.blue,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                disabledBackgroundColor: Colors.grey,
-                              ),
-                              icon: const Icon(
-                                Icons.file_upload_outlined,
-                                color: Colors.white,
-                              ),
-                              tooltip: context.tr("Load_list"),
-                            ),
-                          ),
-                        ],
-                      ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

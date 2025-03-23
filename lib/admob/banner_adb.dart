@@ -14,6 +14,7 @@ class AdManager {
   AdManagerBannerAd? guessingGameBannerAd;
   AdManagerBannerAd? touchRouletteGameBannerAd;
   AdManagerBannerAd? russianRouletteGameBannerAd;
+  AdManagerBannerAd? drawLotsGameBannerAd;
 
   AdManager({
     this.homeBannerAd,
@@ -21,6 +22,7 @@ class AdManager {
     this.guessingGameBannerAd,
     this.touchRouletteGameBannerAd,
     this.russianRouletteGameBannerAd,
+    this.drawLotsGameBannerAd,
   });
 
   // AdManager 객체 초기화
@@ -34,12 +36,10 @@ class AdManager {
         guessingGameBannerAd: _loadBannerAd(
           guessingGameBannerAdId,
         ),
-        touchRouletteGameBannerAd: _loadBannerAd(
-          touchRouletteGameBannerAdId
-        ),
-        russianRouletteGameBannerAd: _loadBannerAd(
-          russianRouletteGameBannerAdId
-        ),
+        touchRouletteGameBannerAd: _loadBannerAd(touchRouletteGameBannerAdId),
+        russianRouletteGameBannerAd:
+            _loadBannerAd(russianRouletteGameBannerAdId),
+        drawLotsGameBannerAd: _loadBannerAd(drawLotsGameBannerAdId),
       );
 }
 
@@ -84,6 +84,14 @@ final russianRouletteGameBannerAdId = kDebugMode
     : Platform.isAndroid
         ? 'ca-app-pub-3749644430343897/6510779477'
         : 'ca-app-pub-3749644430343897/9105153225';
+
+final drawLotsGameBannerAdId = kDebugMode
+    ? Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/9214589741'
+        : 'ca-app-pub-3940256099942544/2435281174'
+    : Platform.isAndroid
+        ? 'ca-app-pub-3749644430343897/2619779116'
+        : 'ca-app-pub-3749644430343897/8361893098';
 
 AdManagerBannerAd _loadBannerAd(String adUnitId) {
   return AdManagerBannerAd(
