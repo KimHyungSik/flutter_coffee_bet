@@ -148,13 +148,13 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
     return Column(
       children: [
         // Title text
-        const Expanded(
+        Expanded(
           flex: 2,
           child: Center(
             child: Text(
-              "제비뽑기 할 사람을\n적어주세요.",
+              context.tr("Add_names_to_start_the_lottery"),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -220,17 +220,35 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
             padding: const EdgeInsets.all(24.0),
             child: _participants.isEmpty
                 ? const SizedBox.shrink()
-                : SingleChildScrollView(
-              controller: _scrollController,
-              child: Wrap(
-                spacing: 10, // gap between adjacent chips
-                runSpacing: 10, // gap between lines
-                children: _participants.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  String name = entry.value;
-                  return _buildParticipantsItem(index, name);
-                }).toList(),
-              ),
+                : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    "${context.tr("Participants")} (${_participants.length})",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Wrap(
+                      spacing: 10, // gap between adjacent chips
+                      runSpacing: 10, // gap between lines
+                      children: _participants.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        String name = entry.value;
+                        return _buildParticipantsItem(index, name);
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -304,31 +322,29 @@ class _DrawingLotsGameScreenState extends State<DrawingLotsGameScreen>
             },
           )
         else
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _winners
-                    .map((winner) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    winner,
-                    style: const TextStyle(
-                      color: Colors.yellow,
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 10,
-                          color: Colors.black54,
-                        ),
-                      ],
-                    ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _winners
+                  .map((winner) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  winner,
+                  style: const TextStyle(
+                    color: Colors.yellow,
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2, 2),
+                        blurRadius: 10,
+                        color: Colors.black54,
+                      ),
+                    ],
                   ),
-                ))
-                    .toList(),
-              ),
+                ),
+              ))
+                  .toList(),
             ),
           ),
       ],

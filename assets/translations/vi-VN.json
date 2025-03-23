@@ -11,5 +11,15 @@
   "Odds_of_winning": "Xác suất thắng",
   "Russian_Roulette": "🔫 Súng Nga",
   "Spin_the_chamber_and_test_your_luck": "Quay lọ đạn và thử vận may của bạn",
-  "Chamber_count": "Số lọ đạn"
+  "Chamber_count": "Số lọ đạn",
+
+  "DrawingLots_Game": "🎯 Bốc Thăm",
+  "Add_names_to_start_the_lottery": "Thêm tên để bắt đầu bốc thăm",
+  "Enter_name": "Nhập tên",
+  "Add": "Thêm",
+  "Draw_Winner": "Rút Thăm",
+  "Winner": "Người Thắng",
+  "Winners": "Những Người Thắng",
+  "Start_New_Drawing": "Bắt Đầu Bốc Thăm Mới",
+  "Participants": "Người Tham Gia"
 }

@@ -11,5 +11,15 @@
   "Odds_of_winning": "Odds of losing",
   "Russian_Roulette": "🔫 Russian Roulette",
   "Spin_the_chamber_and_test_your_luck": "Spin the chamber and test your luck",
-  "Chamber_count": "Chamber count"
+  "Chamber_count": "Chamber count",
+
+  "DrawingLots_Game": "🎯 Drawing Lots",
+  "Add_names_to_start_the_lottery": "Add names to start drawing lots",
+  "Enter_name": "Enter name",
+  "Add": "Add",
+  "Draw_Winner": "Draw Winner",
+  "Winner": "Winner",
+  "Winners": "Winners",
+  "Start_New_Drawing": "Start New Drawing",
+  "Participants": "Participants"
 }

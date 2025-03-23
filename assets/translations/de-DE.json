@@ -11,5 +11,15 @@
   "Odds_of_winning": "Gewinnchancen",
   "Russian_Roulette": "🔫 Russisches Roulette",
   "Spin_the_chamber_and_test_your_luck": "Drehen Sie die Kammer und testen Sie Ihr Glück",
-  "Chamber_count": "Kammeranzahl"
+  "Chamber_count": "Kammeranzahl",
+
+  "DrawingLots_Game": "🎯 Losziehung",
+  "Add_names_to_start_the_lottery": "Namen hinzufügen, um mit der Ziehung zu beginnen",
+  "Enter_name": "Namen eingeben",
+  "Add": "Hinzufügen",
+  "Draw_Winner": "Gewinner ziehen",
+  "Winner": "Gewinner",
+  "Winners": "Gewinner",
+  "Start_New_Drawing": "Neue Ziehung starten",
+  "Participants": "Teilnehmer"
 }

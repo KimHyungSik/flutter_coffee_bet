@@ -11,5 +11,15 @@
   "Odds_of_winning" : "당첨 확률",
   "Russian_Roulette": "🔫 러시안 룰렛",
   "Spin_the_chamber_and_test_your_luck": "총실을 돌려\n운을 시험하세요.",
-  "Chamber_count": "총실 수"
+  "Chamber_count": "총실 수",
+
+  "DrawingLots_Game": "🎯 제비뽑기",
+  "Add_names_to_start_the_lottery": "제비뽑기 할 사람을\n적어주세요.",
+  "Enter_name": "이름 입력",
+  "Add": "추가",
+  "Draw_Winner": "당첨자 뽑기",
+  "Winner": "당첨자",
+  "Winners": "당첨자들",
+  "Start_New_Drawing": "새로운 제비뽑기",
+  "Participants": "참가자"
 }

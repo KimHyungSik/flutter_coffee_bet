@@ -11,5 +11,15 @@
   "Odds_of_winning": "当選確率",
   "Russian_Roulette": "🔫 ロシアンルーレット",
   "Spin_the_chamber_and_test_your_luck": "チャンバーを回して運を試してください",
-  "Chamber_count": "チャンバー数"
+  "Chamber_count": "チャンバー数",
+
+  "DrawingLots_Game": "🎯 抽選ゲーム",
+  "Add_names_to_start_the_lottery": "名前を追加して抽選を始めてください",
+  "Enter_name": "名前を入力",
+  "Add": "追加",
+  "Draw_Winner": "抽選する",
+  "Winner": "当選者",
+  "Winners": "当選者たち",
+  "Start_New_Drawing": "新しい抽選を始める",
+  "Participants": "参加者"
 }

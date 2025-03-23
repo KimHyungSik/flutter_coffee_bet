@@ -11,5 +11,15 @@
   "Odds_of_winning": "Chances de perdre",
   "Russian_Roulette": "🔫 Roulette Russe",
   "Spin_the_chamber_and_test_your_luck": "Faites tourner la chambre et test",
-  "Chamber_count": "Nombre de chambres"
+  "Chamber_count": "Nombre de chambres",
+
+  "DrawingLots_Game": "🎯 Tirage au Sort",
+  "Add_names_to_start_the_lottery": "Ajoutez des noms pour commencer le tirage",
+  "Enter_name": "Entrez un nom",
+  "Add": "Ajouter",
+  "Draw_Winner": "Tirer le Gagnant",
+  "Winner": "Gagnant",
+  "Winners": "Gagnants",
+  "Start_New_Drawing": "Nouveau Tirage",
+  "Participants": "Participants"
 }

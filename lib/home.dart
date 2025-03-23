@@ -26,65 +26,65 @@ class HomeScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    spacing: 16,
-                    children: [
-                      _homeButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RandomGameApp()),
-                          );
-                        },
-                        title: context.tr("Random_Game"),
-                      ),
-                      _homeButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const GuessingGameApp()),
-                          );
-                        },
-                        title: context.tr("Sense_Game"),
-                      ),
-                      _homeButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TouchRouletteGame(),
-                            ),
-                          );
-                        },
-                        title: context.tr("Touch_Roulette"),
-                      ),
-                      _homeButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RussianRouletteGame(),
-                            ),
-                          );
-                        },
-                        title: context.tr("Russian_Roulette"),
-                      ),
-                      _homeButton(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const DrawingLotsGameApp(),
-                              ),
-                            );
-                          },
-                          title: "Draw_Lots_Game"),
-                    ],
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 16,
+                  children: [
+                    _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RandomGameApp()),
+                        );
+                      },
+                      title: context.tr("Random_Game"),
+                    ),
+                    _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DrawingLotsGameApp(),
+                          ),
+                        );
+                      },
+                      title: context.tr("DrawingLots_Game"),
+                    ),
+                    _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GuessingGameApp()),
+                        );
+                      },
+                      title: context.tr("Sense_Game"),
+                    ),
+                    _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TouchRouletteGame(),
+                          ),
+                        );
+                      },
+                      title: context.tr("Touch_Roulette"),
+                    ),
+                    _homeButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RussianRouletteGame(),
+                          ),
+                        );
+                      },
+                      title: context.tr("Russian_Roulette"),
+                    ),
+                  ],
                 ),
               ),
             ),
