@@ -64,7 +64,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                   ),
                 if (_isGameOver)
                   GameOverWidget(
-                    title: "당첨!",
+                    title: context.tr("Loser"),
                     onRestart: _restartGame,
                     failingPointers: _failingPointer ?? {},
                   ),
