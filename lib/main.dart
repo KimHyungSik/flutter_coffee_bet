@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:vibration/vibration.dart';
 
 import 'admob/banner_adb.dart';
+import 'admob/interstitial_ad_manager.dart';
 import 'home.dart';
 import 'utils/vibration_manager.dart';
 
@@ -14,6 +15,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MobileAds.instance.initialize();
   AdManager.init();
+
+  InterstitialAdManager.instance.loadInterstitialAd();
 
   await EasyLocalization.ensureInitialized();
 
