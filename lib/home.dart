@@ -59,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: _vibrationEnabled ? Colors.white : Colors.grey,
                   size: 30,
                 ),
-                tooltip: context.tr(_vibrationEnabled ? "Vibration_On" : "Vibration_Off"),
               ),
             ),
           ),

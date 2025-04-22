@@ -46,7 +46,7 @@ class VibrationManager {
   // Vibrate for game over (much more intense pattern)
   static Future<void> vibrateGameOver() async {
     if (await Vibration.hasCustomVibrationsSupport()) {
-      Vibration.vibrate(pattern: [500, 200, 500, 200], intensities: [1, 255]);
+      Vibration.vibrate(pattern: [400, 400], intensities: [1, 128]);
     } else {
       Vibration.vibrate();
       await Future.delayed(Duration(milliseconds: 500));

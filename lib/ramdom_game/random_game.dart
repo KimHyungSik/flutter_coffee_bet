@@ -74,7 +74,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                     ignoring: true,
                     child: Center(
                       child: Text(
-                        '$_countdown',
+                        _countdown > 0 ?'$_countdown' : '1',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 80,
@@ -311,24 +311,34 @@ class _RandomGameScreenState extends State<RandomGameScreen>
       if (_activeTouches.isEmpty) {
         _restartGame();
       } else {
-        // Vibrate for each countdown number
-        VibrationManager.vibrateCountdown();
+        if (_countdown > 0) {
+          // Vibrate for each countdown number
+          VibrationManager.vibrateCountdown();
 
-        setState(
-          () {
-            _countdown--;
-          },
-        );
+          setState(
+            () {
+              _countdown--;
+              },
+          );
+        }
       }
 
       if (_countdown <= 0) {
         timer.cancel();
-        setState(() {
-          _failingPointer.clear();
-          _isCountingDown = false;
-          _isGameActive = true;
+
+        // 0.5초에서 1초 사이의 랜덤한 딜레이 생성
+        final random = Random();
+        final randomDelay = 500 + random.nextInt(501); // 500ms에서 1000ms 사이
+
+        // 랜덤한 딜레이 적용
+        Future.delayed(Duration(milliseconds: randomDelay), () {
+          setState(() {
+            _failingPointer.clear();
+            _isCountingDown = false;
+            _isGameActive = true;
+          });
+          _randomizeUser();
         });
-        _randomizeUser();
       }
     });
   }
