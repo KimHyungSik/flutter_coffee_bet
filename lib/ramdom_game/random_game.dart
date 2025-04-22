@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../admob/banner_adb.dart';
+import '../utils/vibration_manager.dart';
 import '../game_over.dart';
 import '../user_circle_painter.dart';
 
@@ -64,9 +65,9 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                   ),
                 if (_isGameOver)
                   GameOverWidget(
-                    title: context.tr("Loser"),
+                    title: "당첨!",
                     onRestart: _restartGame,
-                    failingPointers: _failingPointer ?? {},
+                    failingPointers: _failingPointer,
                   ),
                 if (_isCountingDown)
                   IgnorePointer(
@@ -139,18 +140,17 @@ class _RandomGameScreenState extends State<RandomGameScreen>
           AdManager.instance.randomGameBannerAd == null
               ? Container()
               : SizedBox(
-            width: AdManager
-                .instance.randomGameBannerAd!.sizes.first.width
-                .toDouble(),
-            height: AdManager
-                .instance.randomGameBannerAd!.sizes.first.height
-                .toDouble(),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: AdWidget(
-                  ad: AdManager.instance.randomGameBannerAd!),
-            ),
-          ),
+                  width: AdManager
+                      .instance.randomGameBannerAd!.sizes.first.width
+                      .toDouble(),
+                  height: AdManager
+                      .instance.randomGameBannerAd!.sizes.first.height
+                      .toDouble(),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AdWidget(ad: AdManager.instance.randomGameBannerAd!),
+                  ),
+                ),
         ],
       ),
     );
@@ -306,10 +306,14 @@ class _RandomGameScreenState extends State<RandomGameScreen>
 
   void _startCountdown() {
     _randomizationTimer?.cancel();
+    VibrationManager.vibrateCountdown();
     _randomizationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_activeTouches.isEmpty) {
         _restartGame();
       } else {
+        // Vibrate for each countdown number
+        VibrationManager.vibrateCountdown();
+
         setState(
           () {
             _countdown--;
@@ -355,17 +359,13 @@ class _RandomGameScreenState extends State<RandomGameScreen>
         _failingPointer[key] = _activeTouches[key]!;
       }
 
-      for (var key in selectedKeys) {
-        _failingPointer[key] = _activeTouches[key]!;
-      }
-      // _selectedPointer = keys[random.nextInt(keys.length)];
-
-      // Remove all other circles except the selected one
-      // _failingPointer![_selectedPointer!] = _activeTouches[_selectedPointer!]!;
       _activeTouches.clear();
       _isGameOver = true;
       _isGameActive = false;
     });
+
+    // Vibrate for game over
+    VibrationManager.vibrateGameOver();
   }
 
   void _restartGame() {

@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../admob/banner_adb.dart';
 import '../common/button/start_button.dart';
+import '../utils/vibration_manager.dart';
 import '../game_over.dart';
 
 class RussianRouletteGame extends StatefulWidget {
@@ -79,18 +80,18 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
           AdManager.instance.russianRouletteGameBannerAd == null
               ? Container()
               : SizedBox(
-                  width: AdManager
-                      .instance.russianRouletteGameBannerAd!.sizes.first.width
-                      .toDouble(),
-                  height: AdManager
-                      .instance.russianRouletteGameBannerAd!.sizes.first.height
-                      .toDouble(),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AdWidget(
-                        ad: AdManager.instance.russianRouletteGameBannerAd!),
-                  ),
-                ),
+            width: AdManager
+                .instance.russianRouletteGameBannerAd!.sizes.first.width
+                .toDouble(),
+            height: AdManager
+                .instance.russianRouletteGameBannerAd!.sizes.first.height
+                .toDouble(),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AdWidget(
+                  ad: AdManager.instance.russianRouletteGameBannerAd!),
+            ),
+          ),
         ],
       ),
     );
@@ -162,6 +163,10 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
   void _fireChamber() {
     if (_isGameOver) return;
     _canFire = false;
+
+    // Vibrate for firing
+    VibrationManager.vibrateCountdown();
+
     Timer(const Duration(milliseconds: 1000), () {
       setState(() {
         _canFire = true;
@@ -285,7 +290,7 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
                 height: 88,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -354,6 +359,9 @@ class _RussianRouletteGameState extends State<RussianRouletteGame> {
     setState(() {
       _isGameOver = true;
     });
+
+    // Vibrate for game over
+    VibrationManager.vibrateGameOver();
   }
 
   void _restartGame() {

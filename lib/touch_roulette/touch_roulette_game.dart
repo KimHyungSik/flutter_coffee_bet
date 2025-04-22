@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../admob/banner_adb.dart';
 import '../common/button/start_button.dart';
+import '../utils/vibration_manager.dart';
 import '../game_over.dart';
 import '../user_circle_painter.dart';
 
@@ -57,18 +58,18 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
           AdManager.instance.touchRouletteGameBannerAd == null
               ? Container()
               : SizedBox(
-                  width: AdManager
-                      .instance.touchRouletteGameBannerAd!.sizes.first.width
-                      .toDouble(),
-                  height: AdManager
-                      .instance.touchRouletteGameBannerAd!.sizes.first.height
-                      .toDouble(),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AdWidget(
-                        ad: AdManager.instance.touchRouletteGameBannerAd!),
-                  ),
-                ),
+            width: AdManager
+                .instance.touchRouletteGameBannerAd!.sizes.first.width
+                .toDouble(),
+            height: AdManager
+                .instance.touchRouletteGameBannerAd!.sizes.first.height
+                .toDouble(),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AdWidget(
+                  ad: AdManager.instance.touchRouletteGameBannerAd!),
+            ),
+          ),
         ],
       ),
     );
@@ -145,6 +146,10 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
 
   void _touchScreen(PointerDownEvent event) {
     if (_isGameOver || !_isGameActive) return;
+
+    // Add a small vibration feedback when the screen is touched
+    VibrationManager.vibrateCountdown();
+
     setState(() {
       _activeTouches[event.pointer] = _getLocalPosition(event);
       if (_isWinner()) {
@@ -162,6 +167,9 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
     setState(() {
       _isGameOver = true;
     });
+
+    // Vibrate for game over
+    VibrationManager.vibrateGameOver();
   }
 
   void _increaseChance() {
@@ -224,7 +232,7 @@ class _TouchRouletteGameState extends State<TouchRouletteGame> {
                 height: 88,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -8,10 +8,38 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'admob/banner_adb.dart';
 import 'admob/full_width_banner.dart';
+import 'utils/vibration_manager.dart';
 import 'draw_lots_game/draw_lots_game.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _vibrationEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVibrationSetting();
+  }
+
+  Future<void> _loadVibrationSetting() async {
+    final isEnabled = VibrationManager.isVibrationEnabled();
+    setState(() {
+      _vibrationEnabled = isEnabled;
+    });
+  }
+
+  Future<void> _toggleVibration() async {
+    final isEnabled = await VibrationManager.toggleVibration();
+    setState(() {
+      _vibrationEnabled = isEnabled;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +48,21 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 40, right: 16),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: _toggleVibration,
+                icon: Icon(
+                  _vibrationEnabled ? Icons.vibration : Icons.phonelink_erase,
+                  color: _vibrationEnabled ? Colors.white : Colors.grey,
+                  size: 30,
+                ),
+                tooltip: context.tr(_vibrationEnabled ? "Vibration_On" : "Vibration_Off"),
+              ),
+            ),
+          ),
           Expanded(
             child: Align(
               alignment: const AlignmentDirectional(0, 0),
@@ -29,7 +72,6 @@ class HomeScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 16,
                   children: [
                     _homeButton(
                       onTap: () {
@@ -41,6 +83,7 @@ class HomeScreen extends StatelessWidget {
                       },
                       title: context.tr("Random_Game"),
                     ),
+                    const SizedBox(height: 16),
                     _homeButton(
                       onTap: () {
                         Navigator.push(
@@ -52,6 +95,7 @@ class HomeScreen extends StatelessWidget {
                       },
                       title: context.tr("DrawingLots_Game"),
                     ),
+                    const SizedBox(height: 16),
                     _homeButton(
                       onTap: () {
                         Navigator.push(
@@ -62,23 +106,25 @@ class HomeScreen extends StatelessWidget {
                       },
                       title: context.tr("Sense_Game"),
                     ),
+                    const SizedBox(height: 16),
                     _homeButton(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TouchRouletteGame(),
+                            builder: (context) => const TouchRouletteGame(),
                           ),
                         );
                       },
                       title: context.tr("Touch_Roulette"),
                     ),
+                    const SizedBox(height: 16),
                     _homeButton(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RussianRouletteGame(),
+                            builder: (context) => const RussianRouletteGame(),
                           ),
                         );
                       },
@@ -92,14 +138,14 @@ class HomeScreen extends StatelessWidget {
           AdManager.instance.homeBannerAd == null
               ? Container()
               : SizedBox(
-                  width: AdManager.instance.homeBannerAd!.sizes.first.width
-                      .toDouble(),
-                  height: AdManager.instance.homeBannerAd!.sizes.first.height
-                      .toDouble(),
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: AdWidget(ad: AdManager.instance.homeBannerAd!)),
-                ),
+            width: AdManager.instance.homeBannerAd!.sizes.first.width
+                .toDouble(),
+            height: AdManager.instance.homeBannerAd!.sizes.first.height
+                .toDouble(),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: AdWidget(ad: AdManager.instance.homeBannerAd!)),
+          ),
         ],
       ),
     );
