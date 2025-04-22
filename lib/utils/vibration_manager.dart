@@ -34,6 +34,8 @@ class VibrationManager {
 
   // Vibrate for countdown (stronger pulse)
   static Future<void> vibrateCountdown() async {
+    if (!_isVibrationEnabled) return;
+
     if (await Vibration.hasCustomVibrationsSupport()) {
       Vibration.vibrate(duration: 300, amplitude: 128);
     } else {
@@ -45,6 +47,8 @@ class VibrationManager {
 
   // Vibrate for game over (much more intense pattern)
   static Future<void> vibrateGameOver() async {
+    if (!_isVibrationEnabled) return;
+
     if (await Vibration.hasCustomVibrationsSupport()) {
       Vibration.vibrate(pattern: [400, 400], intensities: [1, 128]);
     } else {
