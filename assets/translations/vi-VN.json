@@ -30,5 +30,8 @@
   "Saved_lists": "Danh Sách Đã Lưu",
   "No_saved_lists": "Không có danh sách nào được lưu",
   "Save_participant_list": "Lưu danh sách người tham gia",
-  "Enter_list_name": "Nhập tên danh sách"
+  "Enter_list_name": "Nhập tên danh sách",
+
+  "Vibration_On": "Bật Rung",
+  "Vibration_Off": "Tắt Rung"
 }

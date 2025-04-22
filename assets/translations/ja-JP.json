@@ -30,5 +30,8 @@
   "Saved_lists": "保存されたリスト",
   "No_saved_lists": "保存されたリストがありません",
   "Save_participant_list": "参加者リストを保存",
-  "Enter_list_name": "リスト名を入力"
+  "Enter_list_name": "リスト名を入力",
+
+  "Vibration_On": "バイブレーションオン",
+  "Vibration_Off": "バイブレーションオフ"
 }

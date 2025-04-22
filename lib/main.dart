@@ -4,9 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:vibration/vibration.dart';
 
 import 'admob/banner_adb.dart';
 import 'home.dart';
+import 'utils/vibration_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +16,9 @@ void main() async {
   AdManager.init();
 
   await EasyLocalization.ensureInitialized();
+
+  // Initialize vibration manager
+  await VibrationManager.initialize();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 

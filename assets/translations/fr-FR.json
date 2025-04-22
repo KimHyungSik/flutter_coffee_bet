@@ -30,5 +30,8 @@
   "Saved_lists": "Listes enregistrées",
   "No_saved_lists": "Aucune liste enregistrée",
   "Save_participant_list": "Enregistrer la liste des participants",
-  "Enter_list_name": "Entrez le nom de la liste"
+  "Enter_list_name": "Entrez le nom de la liste",
+
+  "Vibration_On": "Vibration Activée",
+  "Vibration_Off": "Vibration Désactivée"
 }

@@ -30,5 +30,8 @@
   "Saved_lists": "Saved lists",
   "No_saved_lists": "No saved lists",
   "Save_participant_list": "Save participant list",
-  "Enter_list_name": "Enter list name"
+  "Enter_list_name": "Enter list name",
+
+  "Vibration_On": "Vibration On",
+  "Vibration_Off": "Vibration Off"
 }
