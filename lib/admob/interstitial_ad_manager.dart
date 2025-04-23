@@ -21,7 +21,6 @@ class InterstitialAdManager {
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
-          print("LOGEE : InterstitialAd loaded $ad");
           _interstitialAd = ad;
           _isAdLoaded = true;
 
@@ -40,7 +39,6 @@ class InterstitialAdManager {
           );
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print("LOGEE : InterstitialAd failed to load $error");
           _isAdLoaded = false;
           _interstitialAd = null;
         },
@@ -51,13 +49,36 @@ class InterstitialAdManager {
   bool get isAdLoaded => _isAdLoaded;
 
   void showInterstitialAd() {
-    print("LOGEE : showInterstitialAd() called $_isAdLoaded $_interstitialAd");
     if (_isAdLoaded && _interstitialAd != null) {
       _interstitialAd!.show();
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          _isAdLoaded = false;
+          _interstitialAd = null;
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          ad.dispose();
+          _isAdLoaded = false;
+          _interstitialAd = null;
+        },
+      );
       _isAdLoaded = false;
     } else {
       Future.delayed(const Duration(seconds: 1), () {
         if (_isAdLoaded && _interstitialAd != null) {
+          _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              _isAdLoaded = false;
+              _interstitialAd = null;
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              ad.dispose();
+              _isAdLoaded = false;
+              _interstitialAd = null;
+            },
+          );
           _interstitialAd!.show();
         }
       });

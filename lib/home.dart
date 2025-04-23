@@ -62,83 +62,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   _vibrationEnabled
                       ? Icons.vibration
                       : Icons.phonelink_erase_rounded,
-                  color: _vibrationEnabled ? Colors.white : Colors.grey,
+                  color: Colors.white,
                   size: 30,
                 ),
-                tooltip: context
-                    .tr(_vibrationEnabled ? "Vibration_On" : "Vibration_Off"),
               ),
             ),
           ),
-          Expanded(
-            child: Align(
-              alignment: const AlignmentDirectional(0, 0),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RandomGameApp()),
-                        );
-                      },
-                      title: context.tr("Random_Game"),
-                    ),
-                    const SizedBox(height: 16),
-                    _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DrawingLotsGameApp(),
-                          ),
-                        );
-                      },
-                      title: context.tr("DrawingLots_Game"),
-                    ),
-                    const SizedBox(height: 16),
-                    _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const GuessingGameApp()),
-                        );
-                      },
-                      title: context.tr("Sense_Game"),
-                    ),
-                    const SizedBox(height: 16),
-                    _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TouchRouletteGame(),
-                          ),
-                        );
-                      },
-                      title: context.tr("Touch_Roulette"),
-                    ),
-                    const SizedBox(height: 16),
-                    _homeButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RussianRouletteGame(),
-                          ),
-                        );
-                      },
-                      title: context.tr("Russian_Roulette"),
-                    ),
-                  ],
-                ),
+          Align(
+            alignment: const AlignmentDirectional(0, 0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _homeButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RandomGameApp()),
+                      );
+                    },
+                    title: context.tr("Random_Game"),
+                  ),
+                  const SizedBox(height: 16),
+                  _homeButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DrawingLotsGameApp(),
+                        ),
+                      );
+                    },
+                    title: context.tr("DrawingLots_Game"),
+                  ),
+                  const SizedBox(height: 16),
+                  _homeButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GuessingGameApp()),
+                      );
+                    },
+                    title: context.tr("Sense_Game"),
+                  ),
+                  const SizedBox(height: 16),
+                  _homeButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TouchRouletteGame(),
+                        ),
+                      );
+                    },
+                    title: context.tr("Touch_Roulette"),
+                  ),
+                  const SizedBox(height: 16),
+                  _homeButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RussianRouletteGame(),
+                        ),
+                      );
+                    },
+                    title: context.tr("Russian_Roulette"),
+                  ),
+                ],
               ),
             ),
           ),
