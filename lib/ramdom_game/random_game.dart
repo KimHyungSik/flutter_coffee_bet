@@ -30,7 +30,7 @@ class RandomGameScreen extends StatefulWidget {
 class _RandomGameScreenState extends State<RandomGameScreen>
     with SingleTickerProviderStateMixin {
   final Map<int, Offset> _activeTouches = {};
-  static const int MAX_GAME_PLAY = 5;
+  static const int MAX_GAME_PLAY = 7;
 
   bool _isCountingDown = false;
   bool _isGameActive = false;
@@ -74,7 +74,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
                     ignoring: true,
                     child: Center(
                       child: Text(
-                        _countdown > 0 ?'$_countdown' : '1',
+                        _countdown > 0 ? '$_countdown' : '1',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 80,
@@ -236,7 +236,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    if (_failingCount < 5) {
+                    if (_failingCount < MAX_GAME_PLAY) {
                       _failingCount++;
                     }
                   });
@@ -318,7 +318,7 @@ class _RandomGameScreenState extends State<RandomGameScreen>
           setState(
             () {
               _countdown--;
-              },
+            },
           );
         }
       }
@@ -327,18 +327,14 @@ class _RandomGameScreenState extends State<RandomGameScreen>
         timer.cancel();
 
         // 0.5초에서 1초 사이의 랜덤한 딜레이 생성
-        final random = Random();
-        final randomDelay = 500 + random.nextInt(501); // 500ms에서 1000ms 사이
 
         // 랜덤한 딜레이 적용
-        Future.delayed(Duration(milliseconds: randomDelay), () {
-          setState(() {
-            _failingPointer.clear();
-            _isCountingDown = false;
-            _isGameActive = true;
-          });
-          _randomizeUser();
+        setState(() {
+          _failingPointer.clear();
+          _isCountingDown = false;
+          _isGameActive = true;
         });
+        _randomizeUser();
       }
     });
   }
