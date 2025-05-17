@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:vibration/vibration.dart';
 
 import 'admob/banner_adb.dart';
 import 'admob/interstitial_ad_manager.dart';
@@ -15,8 +14,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MobileAds.instance.initialize();
   AdManager.init();
-
-  InterstitialAdManager.instance.loadInterstitialAd();
 
   await EasyLocalization.ensureInitialized();
 
@@ -41,6 +38,8 @@ void main() async {
         fallbackLocale: const Locale('en', 'US'),
         child: const MainScreen()),
   );
+
+  Future.microtask(() => InterstitialAdManager.instance.loadInterstitialAd());
 }
 
 class MainScreen extends StatelessWidget {

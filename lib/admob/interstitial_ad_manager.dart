@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,13 @@ class InterstitialAdManager {
   static InterstitialAdManager? _instance;
   InterstitialAd? _interstitialAd;
   bool _isAdLoaded = false;
+  bool _isLoading = false;
+  Timer? _loadTimer;
+  int _retryAttempt = 0;
+  final int _maxRetryAttempt = 3;
+
+  // Create a completer to track when the ad is loaded
+  Completer<bool>? _adLoadCompleter;
 
   static InterstitialAdManager get instance {
     _instance ??= InterstitialAdManager._();
@@ -15,91 +23,140 @@ class InterstitialAdManager {
 
   InterstitialAdManager._();
 
-  void loadInterstitialAd() {
-    InterstitialAd.load(
+  bool get isAdLoaded => _isAdLoaded;
+
+  /// Loads an interstitial ad asynchronously
+  /// Returns a Future that completes when the ad is loaded or fails
+  Future<bool> loadInterstitialAd() async {
+    // If an ad is already loaded, return true immediately
+    if (_isAdLoaded && _interstitialAd != null) {
+      return true;
+    }
+
+    // If an ad is already being loaded, return the existing completer
+    if (_isLoading && _adLoadCompleter != null) {
+      return _adLoadCompleter!.future;
+    }
+
+    // Create a new completer to track this load attempt
+    _adLoadCompleter = Completer<bool>();
+    _isLoading = true;
+
+    // Cancel any existing load timer
+    _loadTimer?.cancel();
+
+    await InterstitialAd.load(
       adUnitId: _getInterstitialAdUnitId(),
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialAd = ad;
           _isAdLoaded = true;
+          _isLoading = false;
+          _retryAttempt = 0;
 
-          // 광고가 닫힐 때 다시 로드하는 콜백 설정
+          // Set up ad callbacks
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
-              _isAdLoaded = false;
-              _interstitialAd = null;
-              loadInterstitialAd(); // 광고가 닫히면 새 광고 로드
+              _handleAdClosed();
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
+              ad.dispose();
               _isAdLoaded = false;
               _interstitialAd = null;
-              loadInterstitialAd(); // 광고 표시 실패 시 새 광고 로드
+              // Reload ad for next time
+              _scheduleAdLoad();
             },
           );
+
+          // Complete the future with success
+          if (!_adLoadCompleter!.isCompleted) {
+            _adLoadCompleter!.complete(true);
+          }
         },
         onAdFailedToLoad: (LoadAdError error) {
           _isAdLoaded = false;
+          _isLoading = false;
           _interstitialAd = null;
+          _retryAttempt++;
+
+          // Schedule retry if under max attempts
+          if (_retryAttempt <= _maxRetryAttempt) {
+            _scheduleAdLoad();
+          }
+
+          // Complete the future with failure
+          if (!_adLoadCompleter!.isCompleted) {
+            _adLoadCompleter!.complete(false);
+          }
         },
       ),
     );
+
+    return _adLoadCompleter!.future;
   }
 
-  bool get isAdLoaded => _isAdLoaded;
-
-  void showInterstitialAd() {
-    if (_isAdLoaded && _interstitialAd != null) {
-      _interstitialAd!.show();
-      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad) {
-          ad.dispose();
-          _isAdLoaded = false;
-          _interstitialAd = null;
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          ad.dispose();
-          _isAdLoaded = false;
-          _interstitialAd = null;
-        },
-      );
-      _isAdLoaded = false;
-    } else {
-      Future.delayed(const Duration(seconds: 1), () {
-        if (_isAdLoaded && _interstitialAd != null) {
-          _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              ad.dispose();
-              _isAdLoaded = false;
-              _interstitialAd = null;
-            },
-            onAdFailedToShowFullScreenContent: (ad, error) {
-              ad.dispose();
-              _isAdLoaded = false;
-              _interstitialAd = null;
-            },
-          );
-          _interstitialAd!.show();
-        }
-      });
+  /// Shows the interstitial ad if it's loaded
+  /// Returns true if ad was shown, false otherwise
+  Future<bool> showInterstitialAd() async {
+    // If ad is not loaded, try to load it first
+    if (!_isAdLoaded || _interstitialAd == null) {
+      final loaded = await loadInterstitialAd();
+      if (!loaded) return false;
     }
+
+    // If ad is ready, show it
+    if (_isAdLoaded && _interstitialAd != null) {
+      try {
+        await _interstitialAd!.show();
+        return true;
+      } catch (e) {
+        _handleAdClosed();
+        return false;
+      }
+    }
+    
+    return false;
+  }
+
+  void _handleAdClosed() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.dispose();
+    }
+    _isAdLoaded = false;
+    _interstitialAd = null;
+    
+    // Preload next ad
+    _scheduleAdLoad();
+  }
+
+  void _scheduleAdLoad() {
+    // Cancel any existing timer
+    _loadTimer?.cancel();
+    
+    // Schedule ad load with backoff based on retry attempts
+    final delay = Duration(seconds: _retryAttempt > 0 ? 2 * _retryAttempt : 1);
+    _loadTimer = Timer(delay, () {
+      loadInterstitialAd();
+    });
   }
 
   String _getInterstitialAdUnitId() {
     if (kDebugMode) {
-      // 테스트 광고 ID
+      // Test ad IDs
       return Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/1033173712'
           : 'ca-app-pub-3940256099942544/4411468910';
     } else {
-      // 실제 광고 ID - 실제 ID로 변경 필요
+      // Production ad IDs
       return Platform.isAndroid
           ? 'ca-app-pub-3749644430343897/8876680211'
-          : 'ca-app-pub-3749644430343897/1796266545'; // 실제 iOS 전면광고 ID로 교체 필요
+          : 'ca-app-pub-3749644430343897/1796266545';
     }
   }
 
   void dispose() {
+    _loadTimer?.cancel();
     _interstitialAd?.dispose();
     _interstitialAd = null;
     _isAdLoaded = false;
