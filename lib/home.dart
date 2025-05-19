@@ -122,18 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     title: context.tr("Touch_Roulette"),
                   ),
-                  const SizedBox(height: 16),
-                  _homeButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RussianRouletteGame(),
-                        ),
-                      );
-                    },
-                    title: context.tr("Russian_Roulette"),
-                  ),
                 ],
               ),
             ),
